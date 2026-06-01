@@ -3,20 +3,14 @@ import { describe, expect, it } from "bun:test";
 import type { Clock } from "@shared/clock";
 import type { IdGenerator } from "@shared/id-generator";
 
-import type { Task } from "../domain/task.schema";
-import type { TaskRepository } from "../ports/task-repository";
+import { makeInMemoryTaskRepository } from "../infra/in-memory-task-repository";
 import { makeCreateTask } from "./create-task";
 
 describe("createTask", () => {
   it("creates and persists a task", async () => {
     const date = new Date("2026-01-01T00:00:00.000Z");
-    const createdTasks: Task[] = [];
 
-    const taskRepository: TaskRepository = {
-      create: async (task) => {
-        createdTasks.push(task);
-      },
-    };
+    const taskRepository = makeInMemoryTaskRepository();
 
     const idGenerator: IdGenerator = {
       generate: () => "0195f6f9-391f-7000-8000-000000000001",
@@ -49,7 +43,10 @@ describe("createTask", () => {
       updatedAt: date,
     });
 
-    expect(createdTasks).toHaveLength(1);
-    expect(createdTasks[0]).toEqual(task);
+    expect(taskRepository.items).toHaveLength(1);
+
+    const createdTask = taskRepository.items.at(0);
+
+    expect(createdTask).toEqual(task);
   });
 });
