@@ -11,6 +11,11 @@ export type UpdateCategoryInput = {
   updatedAt: Date;
 };
 
+export type ListCategoriesInput = {
+  userId: string;
+  name?: string;
+};
+
 export type CategoryRepository = {
   create: (category: Category) => Promise<Category>;
 
@@ -19,4 +24,6 @@ export type CategoryRepository = {
   update: (input: UpdateCategoryInput) => Promise<CategoryMutationResult>;
 
   delete: (id: string) => Promise<void>;
+
+  list: (input: ListCategoriesInput) => Promise<Category[]>;
 };

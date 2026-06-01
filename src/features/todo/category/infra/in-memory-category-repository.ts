@@ -58,4 +58,14 @@ export const makeInMemoryCategoryRepository = (
       state.categories.splice(categoryIndex, 1);
     }
   },
+
+  list: async ({ userId, name }) =>
+    state.categories.filter((category) => {
+      const matchesUserId = category.userId === userId;
+      const matchesName =
+        name === undefined ||
+        category.name.toLowerCase().includes(name.toLowerCase());
+
+      return matchesUserId && matchesName;
+    }),
 });
