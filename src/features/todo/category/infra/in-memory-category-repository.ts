@@ -48,4 +48,14 @@ export const makeInMemoryCategoryRepository = (
       updatedAt,
     };
   },
+
+  delete: async (id) => {
+    const categoryIndex = state.categories.findIndex(
+      (category) => category.id === id,
+    );
+
+    if (categoryIndex >= 0) {
+      state.categories.splice(categoryIndex, 1);
+    }
+  },
 });

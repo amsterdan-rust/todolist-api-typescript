@@ -17,4 +17,6 @@ export type CategoryRepository = {
   existsById: (id: string) => Promise<boolean>;
 
   update: (input: UpdateCategoryInput) => Promise<CategoryMutationResult>;
+
+  delete: (id: string) => Promise<void>;
 };

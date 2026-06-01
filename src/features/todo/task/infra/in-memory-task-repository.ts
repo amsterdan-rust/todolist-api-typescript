@@ -136,4 +136,18 @@ export const makeInMemoryTaskRepository = (
       return nextDate - currentDate;
     });
   },
+
+  removeCategory: async ({ categoryId, updatedAt }) => {
+    state.tasks.forEach((task, index) => {
+      if (task.categoryId !== categoryId) {
+        return;
+      }
+
+      state.tasks[index] = {
+        ...task,
+        categoryId: null,
+        updatedAt,
+      };
+    });
+  },
 });

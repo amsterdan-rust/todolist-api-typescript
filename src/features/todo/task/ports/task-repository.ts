@@ -32,6 +32,11 @@ export type ListTasksInput = {
   orderDirection?: "asc" | "desc";
 };
 
+export type RemoveCategoryFromTasksInput = {
+  categoryId: string;
+  updatedAt: Date;
+};
+
 export type TaskRepository = {
   create: (task: Task) => Promise<Task>;
 
@@ -45,4 +50,6 @@ export type TaskRepository = {
   delete: (id: string) => Promise<void>;
 
   list: (input: ListTasksInput) => Promise<Task[]>;
+
+  removeCategory: (input: RemoveCategoryFromTasksInput) => Promise<void>;
 };
