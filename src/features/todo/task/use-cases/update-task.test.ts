@@ -6,7 +6,7 @@ import { makeCompleteTask } from "./complete-task";
 import { makeUpdateTask } from "./update-task";
 
 describe("updateTask", () => {
-  it("updates title, description and categoryId", async () => {
+  it("updates title, description and categoryId and returns mutation result", async () => {
     const createdAt = new Date("2026-01-01T00:00:00.000Z");
     const updatedAt = new Date("2026-01-02T00:00:00.000Z");
 
@@ -31,22 +31,25 @@ describe("updateTask", () => {
       },
     });
 
-    const updatedTask = await updateTask({
+    const result = await updateTask({
       id: task.id,
       title: "Comprar leite",
       description: "Comprar leite integral",
       categoryId: "0195f6f9-391f-7000-8000-000000000003",
     });
 
-    expect(updatedTask).toEqual({
+    expect(result).toEqual({
+      id: task.id,
+      updatedAt,
+    });
+
+    expect(taskRepository.items[0]).toEqual({
       ...task,
       title: "Comprar leite",
       description: "Comprar leite integral",
       categoryId: "0195f6f9-391f-7000-8000-000000000003",
       updatedAt,
     });
-
-    expect(taskRepository.items[0]).toEqual(updatedTask);
   });
 
   it("keeps current values when fields are not provided", async () => {
@@ -74,11 +77,16 @@ describe("updateTask", () => {
       },
     });
 
-    const updatedTask = await updateTask({
+    const result = await updateTask({
       id: task.id,
     });
 
-    expect(updatedTask).toEqual({
+    expect(result).toEqual({
+      id: task.id,
+      updatedAt,
+    });
+
+    expect(taskRepository.items[0]).toEqual({
       ...task,
       updatedAt,
     });
@@ -109,13 +117,18 @@ describe("updateTask", () => {
       },
     });
 
-    const updatedTask = await updateTask({
+    const result = await updateTask({
       id: task.id,
       description: null,
       categoryId: null,
     });
 
-    expect(updatedTask).toEqual({
+    expect(result).toEqual({
+      id: task.id,
+      updatedAt,
+    });
+
+    expect(taskRepository.items[0]).toEqual({
       ...task,
       description: null,
       categoryId: null,
@@ -158,12 +171,17 @@ describe("updateTask", () => {
       },
     });
 
-    const updatedTask = await updateTask({
+    const result = await updateTask({
       id: task.id,
       title: "Comprar leite",
     });
 
-    expect(updatedTask).toEqual({
+    expect(result).toEqual({
+      id: task.id,
+      updatedAt,
+    });
+
+    expect(taskRepository.items[0]).toEqual({
       ...task,
       title: "Comprar leite",
       status: "done",
@@ -171,7 +189,7 @@ describe("updateTask", () => {
     });
   });
 
-  it("throws when task does not exist", async () => {
+  it("throws when task does not exist", () => {
     const taskRepository = makeInMemoryTaskRepository();
 
     const updateTask = makeUpdateTask({
@@ -189,7 +207,7 @@ describe("updateTask", () => {
     ).rejects.toThrow("Task not found");
   });
 
-  it("rejects invalid title", async () => {
+  it("rejects invalid title", () => {
     const createdAt = new Date("2026-01-01T00:00:00.000Z");
 
     const taskRepository = makeInMemoryTaskRepository();
@@ -202,7 +220,7 @@ describe("updateTask", () => {
       updatedAt: createdAt,
     });
 
-    await taskRepository.create(task);
+    taskRepository.create(task);
 
     const updateTask = makeUpdateTask({
       taskRepository,

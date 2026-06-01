@@ -1,14 +1,12 @@
 import { describe, expect, it } from "bun:test";
 
-import type { Clock } from "@shared/clock";
-
 import { makeTask } from "../domain/task";
 import { makeInMemoryTaskRepository } from "../infra/in-memory-task-repository";
 import { makeCompleteTask } from "./complete-task";
 import { makeReopenTask } from "./reopen-task";
 
 describe("reopenTask", () => {
-  it("marks a task as pending and updates updatedAt", async () => {
+  it("marks a task as pending and returns mutation result", async () => {
     const createdAt = new Date("2026-01-01T00:00:00.000Z");
     const completedAt = new Date("2026-01-02T00:00:00.000Z");
     const reopenedAt = new Date("2026-01-03T00:00:00.000Z");
@@ -36,29 +34,30 @@ describe("reopenTask", () => {
       id: task.id,
     });
 
-    const clock: Clock = {
-      now: () => reopenedAt,
-    };
-
     const reopenTask = makeReopenTask({
       taskRepository,
-      clock,
+      clock: {
+        now: () => reopenedAt,
+      },
     });
 
-    const reopenedTask = await reopenTask({
+    const result = await reopenTask({
       id: task.id,
     });
 
-    expect(reopenedTask).toEqual({
+    expect(result).toEqual({
+      id: task.id,
+      updatedAt: reopenedAt,
+    });
+
+    expect(taskRepository.items[0]).toEqual({
       ...task,
       status: "pending",
       updatedAt: reopenedAt,
     });
-
-    expect(taskRepository.items[0]).toEqual(reopenedTask);
   });
 
-  it("throws when task does not exist", async () => {
+  it("throws when task does not exist", () => {
     const taskRepository = makeInMemoryTaskRepository();
 
     const reopenTask = makeReopenTask({

@@ -1,8 +1,10 @@
 import type { Clock } from "@shared/clock";
 
 import { taskError } from "../domain/task.errors";
-import type { Task } from "../domain/task.schema";
-import type { TaskRepository } from "../ports/task-repository";
+import type {
+  TaskMutationResult,
+  TaskRepository,
+} from "../ports/task-repository";
 
 type ReopenTaskInput = {
   id: string;
@@ -13,26 +15,21 @@ type ReopenTaskDeps = {
   clock: Clock;
 };
 
-export type ReopenTask = (input: ReopenTaskInput) => Promise<Task>;
+export type ReopenTask = (
+  input: ReopenTaskInput,
+) => Promise<TaskMutationResult>;
 
 export const makeReopenTask =
   ({ taskRepository, clock }: ReopenTaskDeps): ReopenTask =>
   async ({ id }) => {
-    const task = await taskRepository.findById(id);
+    const taskExists = await taskRepository.existsById(id);
 
-    if (!task) {
+    if (!taskExists) {
       throw taskError.NotFound();
     }
 
-    const now = clock.now();
-
-    const reopenedTask: Task = {
-      ...task,
-      status: "pending",
-      updatedAt: now,
-    };
-
-    await taskRepository.save(reopenedTask);
-
-    return reopenedTask;
+    return taskRepository.reopen({
+      id,
+      updatedAt: clock.now(),
+    });
   };

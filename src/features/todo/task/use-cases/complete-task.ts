@@ -1,8 +1,10 @@
 import type { Clock } from "@shared/clock";
 
 import { taskError } from "../domain/task.errors";
-import type { Task } from "../domain/task.schema";
-import type { TaskRepository } from "../ports/task-repository";
+import type {
+  TaskMutationResult,
+  TaskRepository,
+} from "../ports/task-repository";
 
 type CompleteTaskInput = {
   id: string;
@@ -13,26 +15,21 @@ type CompleteTaskDeps = {
   clock: Clock;
 };
 
-export type CompleteTask = (input: CompleteTaskInput) => Promise<Task>;
+export type CompleteTask = (
+  input: CompleteTaskInput,
+) => Promise<TaskMutationResult>;
 
 export const makeCompleteTask =
   ({ taskRepository, clock }: CompleteTaskDeps): CompleteTask =>
   async ({ id }) => {
-    const task = await taskRepository.findById(id);
+    const taskExists = await taskRepository.existsById(id);
 
-    if (!task) {
+    if (!taskExists) {
       throw taskError.NotFound();
     }
 
-    const now = clock.now();
-
-    const completedTask: Task = {
-      ...task,
-      status: "done",
-      updatedAt: now,
-    };
-
-    await taskRepository.save(completedTask);
-
-    return completedTask;
+    return taskRepository.complete({
+      id,
+      updatedAt: clock.now(),
+    });
   };
