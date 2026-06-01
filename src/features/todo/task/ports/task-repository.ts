@@ -41,6 +41,7 @@ export type TaskRepository = {
   create: (task: Task) => Promise<Task>;
 
   existsById: (id: string) => Promise<boolean>;
+  findById: (id: string) => Promise<Task | null>;
 
   complete: (input: CompleteTaskInput) => Promise<TaskMutationResult>;
   reopen: (input: ReopenTaskInput) => Promise<TaskMutationResult>;
