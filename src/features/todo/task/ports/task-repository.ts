@@ -23,6 +23,15 @@ export type UpdateTaskInput = {
   updatedAt: Date;
 };
 
+export type ListTasksInput = {
+  userId: string;
+  status?: TaskStatus;
+  categoryId?: string | null;
+  title?: string;
+  orderBy?: "createdAt" | "updatedAt";
+  orderDirection?: "asc" | "desc";
+};
+
 export type TaskRepository = {
   create: (task: Task) => Promise<Task>;
 
@@ -34,4 +43,6 @@ export type TaskRepository = {
   update: (input: UpdateTaskInput) => Promise<TaskMutationResult>;
 
   delete: (id: string) => Promise<void>;
+
+  list: (input: ListTasksInput) => Promise<Task[]>;
 };

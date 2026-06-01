@@ -102,4 +102,38 @@ export const makeInMemoryTaskRepository = (
       state.tasks.splice(taskIndex, 1);
     }
   },
+
+  list: async ({
+    userId,
+    status,
+    categoryId,
+    title,
+    orderBy = "createdAt",
+    orderDirection = "desc",
+  }) => {
+    const filteredTasks = state.tasks.filter((task) => {
+      const matchesUserId = task.userId === userId;
+      const matchesStatus = status === undefined || task.status === status;
+      const matchesCategoryId =
+        categoryId === undefined || task.categoryId === categoryId;
+      const matchesTitle =
+        title === undefined ||
+        task.title.toLowerCase().includes(title.toLowerCase());
+
+      return (
+        matchesUserId && matchesStatus && matchesCategoryId && matchesTitle
+      );
+    });
+
+    return filteredTasks.toSorted((currentTask, nextTask) => {
+      const currentDate = currentTask[orderBy].getTime();
+      const nextDate = nextTask[orderBy].getTime();
+
+      if (orderDirection === "asc") {
+        return currentDate - nextDate;
+      }
+
+      return nextDate - currentDate;
+    });
+  },
 });
