@@ -12,14 +12,13 @@
 
     "types": ["bun"],
 
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@app/*": ["src/app/*"],
-      "@features/*": ["src/features/*"],
-      "@shared/*": ["src/shared/*"],
-      "@todo/*": ["src/features/todo/*"],
-      "@auth/*": ["src/features/auth/*"],
+      "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
+      "@features/*": ["./src/features/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@todo/*": ["./src/features/todo/*"],
+      "@auth/*": ["./src/features/auth/*"],
     },
 
     "strict": true,
