@@ -94,4 +94,12 @@ export const makeInMemoryTaskRepository = (
       updatedAt,
     };
   },
+
+  delete: async (id) => {
+    const taskIndex = state.tasks.findIndex((task) => task.id === id);
+
+    if (taskIndex >= 0) {
+      state.tasks.splice(taskIndex, 1);
+    }
+  },
 });

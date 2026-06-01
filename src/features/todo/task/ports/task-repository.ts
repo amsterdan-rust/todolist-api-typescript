@@ -32,4 +32,6 @@ export type TaskRepository = {
   reopen: (input: ReopenTaskInput) => Promise<TaskMutationResult>;
 
   update: (input: UpdateTaskInput) => Promise<TaskMutationResult>;
+
+  delete: (id: string) => Promise<void>;
 };
