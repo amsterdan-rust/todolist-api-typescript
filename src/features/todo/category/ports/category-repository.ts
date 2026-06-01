@@ -1,5 +1,20 @@
 import type { Category } from "../domain/category.schema";
 
+export type CategoryMutationResult = {
+  id: string;
+  updatedAt: Date;
+};
+
+export type UpdateCategoryInput = {
+  id: string;
+  name: string;
+  updatedAt: Date;
+};
+
 export type CategoryRepository = {
   create: (category: Category) => Promise<Category>;
+
+  existsById: (id: string) => Promise<boolean>;
+
+  update: (input: UpdateCategoryInput) => Promise<CategoryMutationResult>;
 };

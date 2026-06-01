@@ -1,3 +1,4 @@
+import { makeCategory } from "../domain/category";
 import type { Category } from "../domain/category.schema";
 import type { CategoryRepository } from "../ports/category-repository";
 
@@ -18,5 +19,33 @@ export const makeInMemoryCategoryRepository = (
     state.categories.push(category);
 
     return category;
+  },
+
+  existsById: async (id) =>
+    state.categories.some((category) => category.id === id),
+
+  update: async ({ id, name, updatedAt }) => {
+    const categoryIndex = state.categories.findIndex(
+      (category) => category.id === id,
+    );
+
+    const category = state.categories[categoryIndex];
+
+    if (!category) {
+      throw new Error("Category not found");
+    }
+
+    const updatedCategory = makeCategory({
+      ...category,
+      name,
+      updatedAt,
+    });
+
+    state.categories[categoryIndex] = updatedCategory;
+
+    return {
+      id,
+      updatedAt,
+    };
   },
 });
