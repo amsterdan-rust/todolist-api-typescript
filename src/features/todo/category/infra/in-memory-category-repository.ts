@@ -24,6 +24,9 @@ export const makeInMemoryCategoryRepository = (
   existsById: async (id) =>
     state.categories.some((category) => category.id === id),
 
+  findById: async (id) =>
+    state.categories.find((category) => category.id === id) ?? null,
+
   update: async ({ id, name, updatedAt }) => {
     const categoryIndex = state.categories.findIndex(
       (category) => category.id === id,

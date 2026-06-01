@@ -20,6 +20,7 @@ export type CategoryRepository = {
   create: (category: Category) => Promise<Category>;
 
   existsById: (id: string) => Promise<boolean>;
+  findById: (id: string) => Promise<Category | null>;
 
   update: (input: UpdateCategoryInput) => Promise<CategoryMutationResult>;
 
