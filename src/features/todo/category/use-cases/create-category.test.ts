@@ -3,21 +3,14 @@ import { describe, expect, it } from "bun:test";
 import type { Clock } from "@shared/clock";
 import type { IdGenerator } from "@shared/id-generator";
 
-import type { CategoryRepository } from "../ports/category-repository";
+import { makeInMemoryCategoryRepository } from "../infra/in-memory-category-repository";
 import { makeCreateCategory } from "./create-category";
 
 describe("createCategory", () => {
   it("creates and persists a category", async () => {
     const date = new Date("2026-01-01T00:00:00.000Z");
-    const categories: Awaited<ReturnType<CategoryRepository["create"]>>[] = [];
 
-    const categoryRepository: CategoryRepository = {
-      create: async (category) => {
-        categories.push(category);
-
-        return category;
-      },
-    };
+    const categoryRepository = makeInMemoryCategoryRepository();
 
     const idGenerator: IdGenerator = {
       generate: () => "0195f6f9-391f-7000-8000-000000000001",
@@ -46,13 +39,11 @@ describe("createCategory", () => {
       updatedAt: date,
     });
 
-    expect(categories).toEqual([category]);
+    expect(categoryRepository.items).toEqual([category]);
   });
 
   it("rejects invalid category name", () => {
-    const categoryRepository: CategoryRepository = {
-      create: async (category) => category,
-    };
+    const categoryRepository = makeInMemoryCategoryRepository();
 
     const createCategory = makeCreateCategory({
       categoryRepository,
