@@ -1,0 +1,17 @@
+{
+  "name": "todolist-api",
+  "type": "module",
+  "scripts": {
+    "test": "bun test",
+    "test:coverage": "bun test --coverage"
+  },
+  "private": true,
+  "dependencies": {
+    "hono": "^4.12.23",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "^6.0.3"
+  }
+}
