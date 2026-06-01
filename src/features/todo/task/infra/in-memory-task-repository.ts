@@ -17,4 +17,18 @@ export const makeInMemoryTaskRepository = (
   create: async (task) => {
     state.tasks.push(task);
   },
+
+  findById: async (id) => {
+    return state.tasks.find((task) => task.id === id) ?? null;
+  },
+
+  save: async (taskToSave) => {
+    const taskIndex = state.tasks.findIndex(
+      (task) => task.id === taskToSave.id,
+    );
+
+    if (taskIndex >= 0) {
+      state.tasks[taskIndex] = taskToSave;
+    }
+  },
 });
