@@ -1,4 +1,4 @@
-import { OpenAPIHono } from "@hono/zod-openapi";
+import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { Scalar } from "@scalar/hono-api-reference";
 
 import type { AppContainer } from "../../container";
@@ -8,6 +8,27 @@ import { registerTaskRoutes } from "./routes/tasks.routes";
 type MakeHonoAppDeps = {
   container: AppContainer;
 };
+
+const healthRoute = createRoute({
+  method: "get",
+  path: "/health",
+  tags: ["Health"],
+  summary: "Check API health",
+  responses: {
+    200: {
+      description: "API is healthy",
+      content: {
+        "application/json": {
+          schema: z.object({
+            status: z.literal("ok").openapi({
+              example: "ok",
+            }),
+          }),
+        },
+      },
+    },
+  },
+});
 
 export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
   const app = new OpenAPIHono();
@@ -30,7 +51,7 @@ export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
     }),
   );
 
-  app.get("/health", (context) =>
+  app.openapi(healthRoute, (context) =>
     context.json({
       status: "ok",
     }),
