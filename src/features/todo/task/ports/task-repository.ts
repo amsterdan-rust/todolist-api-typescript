@@ -1,21 +1,21 @@
 import type { Task, TaskStatus } from "../domain/task.schema";
 
-export type TaskMutationResult = {
+export type TaskRepositoryMutationResult = {
   id: string;
   updatedAt: Date;
 };
 
-export type CompleteTaskInput = {
+export type CompleteTaskRecordInput = {
   id: string;
   updatedAt: Date;
 };
 
-export type ReopenTaskInput = {
+export type ReopenTaskRecordInput = {
   id: string;
   updatedAt: Date;
 };
 
-export type UpdateTaskInput = {
+export type UpdateTaskRecordInput = {
   id: string;
   title?: string;
   description?: string | null;
@@ -23,7 +23,7 @@ export type UpdateTaskInput = {
   updatedAt: Date;
 };
 
-export type ListTasksInput = {
+export type ListTaskRecordsInput = {
   userId: string;
   status?: TaskStatus;
   categoryId?: string | null;
@@ -32,7 +32,7 @@ export type ListTasksInput = {
   orderDirection?: "asc" | "desc";
 };
 
-export type RemoveCategoryFromTasksInput = {
+export type RemoveCategoryFromTaskRecordsInput = {
   categoryId: string;
   updatedAt: Date;
 };
@@ -43,14 +43,21 @@ export type TaskRepository = {
   existsById: (id: string) => Promise<boolean>;
   findById: (id: string) => Promise<Task | null>;
 
-  complete: (input: CompleteTaskInput) => Promise<TaskMutationResult>;
-  reopen: (input: ReopenTaskInput) => Promise<TaskMutationResult>;
+  complete: (
+    input: CompleteTaskRecordInput,
+  ) => Promise<TaskRepositoryMutationResult>;
 
-  update: (input: UpdateTaskInput) => Promise<TaskMutationResult>;
+  reopen: (
+    input: ReopenTaskRecordInput,
+  ) => Promise<TaskRepositoryMutationResult>;
+
+  update: (
+    input: UpdateTaskRecordInput,
+  ) => Promise<TaskRepositoryMutationResult>;
 
   delete: (id: string) => Promise<void>;
 
-  list: (input: ListTasksInput) => Promise<Task[]>;
+  list: (input: ListTaskRecordsInput) => Promise<Task[]>;
 
-  removeCategory: (input: RemoveCategoryFromTasksInput) => Promise<void>;
+  removeCategory: (input: RemoveCategoryFromTaskRecordsInput) => Promise<void>;
 };

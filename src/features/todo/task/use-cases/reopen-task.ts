@@ -2,7 +2,7 @@ import type { Clock } from "@shared/clock";
 
 import { taskError } from "../domain/task.errors";
 import type {
-  TaskMutationResult,
+  TaskRepositoryMutationResult,
   TaskRepository,
 } from "../ports/task-repository";
 
@@ -17,7 +17,7 @@ type ReopenTaskDeps = {
 
 export type ReopenTask = (
   input: ReopenTaskInput,
-) => Promise<TaskMutationResult>;
+) => Promise<TaskRepositoryMutationResult>;
 
 export const makeReopenTask =
   ({ taskRepository, clock }: ReopenTaskDeps): ReopenTask =>

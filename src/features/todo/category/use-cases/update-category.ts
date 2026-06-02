@@ -2,7 +2,7 @@ import type { Clock } from "@shared/clock";
 
 import { categoryError } from "../domain/category.errors";
 import type {
-  CategoryMutationResult,
+  CategoryRepositoryMutationResult,
   CategoryRepository,
 } from "../ports/category-repository";
 
@@ -18,7 +18,7 @@ type UpdateCategoryDeps = {
 
 export type UpdateCategory = (
   input: UpdateCategoryInput,
-) => Promise<CategoryMutationResult>;
+) => Promise<CategoryRepositoryMutationResult>;
 
 export const makeUpdateCategory =
   ({ categoryRepository, clock }: UpdateCategoryDeps): UpdateCategory =>

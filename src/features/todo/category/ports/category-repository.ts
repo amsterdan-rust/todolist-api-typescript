@@ -1,17 +1,17 @@
 import type { Category } from "../domain/category.schema";
 
-export type CategoryMutationResult = {
+export type CategoryRepositoryMutationResult = {
   id: string;
   updatedAt: Date;
 };
 
-export type UpdateCategoryInput = {
+export type UpdateCategoryRecordInput = {
   id: string;
   name: string;
   updatedAt: Date;
 };
 
-export type ListCategoriesInput = {
+export type ListCategoryRecordsInput = {
   userId: string;
   name?: string;
 };
@@ -22,9 +22,11 @@ export type CategoryRepository = {
   existsById: (id: string) => Promise<boolean>;
   findById: (id: string) => Promise<Category | null>;
 
-  update: (input: UpdateCategoryInput) => Promise<CategoryMutationResult>;
+  update: (
+    input: UpdateCategoryRecordInput,
+  ) => Promise<CategoryRepositoryMutationResult>;
 
   delete: (id: string) => Promise<void>;
 
-  list: (input: ListCategoriesInput) => Promise<Category[]>;
+  list: (input: ListCategoryRecordsInput) => Promise<Category[]>;
 };
