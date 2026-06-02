@@ -4,6 +4,7 @@ import type { AppContainer } from "../../../../container";
 import { createTaskRoute } from "./create-task.route";
 import { listTasksRoute } from "./list-tasks.route";
 import { taskPresenter } from "./task.presenter";
+import { getTaskRoute } from "./get-task.route";
 
 type RegisterTaskRoutesDeps = {
   app: OpenAPIHono;
@@ -42,5 +43,15 @@ export const registerTaskRoutes = ({
     });
 
     return context.json(tasks.map(taskPresenter.toHttp), 200);
+  });
+
+  app.openapi(getTaskRoute, async (context) => {
+    const params = context.req.valid("param");
+
+    const task = await container.taskUseCases.getTask({
+      id: params.id,
+    });
+
+    return context.json(taskPresenter.toHttp(task), 200);
   });
 };
