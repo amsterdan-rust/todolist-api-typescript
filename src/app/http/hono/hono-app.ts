@@ -1,8 +1,15 @@
 import { Hono } from "hono";
 
+import type { makeContainer } from "../../container";
 import { makeHonoErrorHandler } from "./hono-error-handler";
 
-export const makeHonoApp = () => {
+type Container = ReturnType<typeof makeContainer>;
+
+type MakeHonoAppDeps = {
+  container: Container;
+};
+
+export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
   const app = new Hono();
 
   app.onError(makeHonoErrorHandler());
