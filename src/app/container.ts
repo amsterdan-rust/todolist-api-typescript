@@ -93,3 +93,5 @@ export const makeContainer = () => {
     },
   };
 };
+
+export type AppContainer = ReturnType<typeof makeContainer>;

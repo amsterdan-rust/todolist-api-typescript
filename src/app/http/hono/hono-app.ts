@@ -1,12 +1,11 @@
 import { Hono } from "hono";
 
-import type { makeContainer } from "../../container";
+import type { AppContainer } from "../../container";
 import { makeHonoErrorHandler } from "./hono-error-handler";
-
-type Container = ReturnType<typeof makeContainer>;
+import { registerTaskRoutes } from "./routes/tasks.routes";
 
 type MakeHonoAppDeps = {
-  container: Container;
+  container: AppContainer;
 };
 
 export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
@@ -19,6 +18,11 @@ export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
       status: "ok",
     }),
   );
+
+  registerTaskRoutes({
+    app,
+    container,
+  });
 
   return app;
 };
