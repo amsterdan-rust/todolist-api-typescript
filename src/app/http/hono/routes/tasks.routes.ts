@@ -1,6 +1,7 @@
 import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
 
 import type { AppContainer } from "../../../container";
+import { taskPresenter } from "./task.presenter";
 
 type RegisterTaskRoutesDeps = {
   app: OpenAPIHono;
@@ -8,19 +9,19 @@ type RegisterTaskRoutesDeps = {
 };
 
 const taskResponseSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
-  categoryId: z.string().uuid().nullable(),
+  id: z.uuid(),
+  userId: z.uuid(),
+  categoryId: z.uuid().nullable(),
   title: z.string(),
   description: z.string().nullable(),
   status: z.enum(["pending", "done"]),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 const createTaskBodySchema = z.object({
-  userId: z.string().uuid(),
-  categoryId: z.string().uuid().nullable().optional(),
+  userId: z.uuid(),
+  categoryId: z.uuid().nullable().optional(),
   title: z.string().trim().min(1).max(120),
   description: z.string().trim().max(500).nullable().optional(),
 });
@@ -68,6 +69,6 @@ export const registerTaskRoutes = ({
       description: body.description ?? null,
     });
 
-    return context.json(task, 201);
+    return context.json(taskPresenter.toHttp(task), 201);
   });
 };
