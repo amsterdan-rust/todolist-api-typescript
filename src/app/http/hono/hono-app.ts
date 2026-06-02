@@ -3,7 +3,7 @@ import { Scalar } from "@scalar/hono-api-reference";
 
 import type { AppContainer } from "../../container";
 import { makeHonoErrorHandler } from "./hono-error-handler";
-import { registerTaskRoutes } from "./routes/tasks.routes";
+import { registerTaskRoutes } from "./routes/tasks/tasks.routes";
 
 type MakeHonoAppDeps = {
   container: AppContainer;
