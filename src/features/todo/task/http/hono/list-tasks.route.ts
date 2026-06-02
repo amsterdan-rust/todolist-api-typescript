@@ -3,10 +3,6 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { taskResponseSchema } from "./task-response.schema";
 
 const listTasksQuerySchema = z.object({
-  userId: z.uuid().openapi({
-    example: "0195f6f9-391f-7000-8000-000000000002",
-  }),
-
   status: z.enum(["pending", "done"]).optional().openapi({
     example: "pending",
   }),

@@ -4,6 +4,10 @@ import { Scalar } from "@scalar/hono-api-reference";
 import type { AppContainer } from "../../container";
 import { makeHonoErrorHandler } from "./hono-error-handler";
 import { registerTaskRoutes } from "@todo/task/http/hono/tasks.routes";
+import {
+  fakeAuthMiddleware,
+  type AuthVariables,
+} from "./middlewares/fake-auth.middleware";
 
 type MakeHonoAppDeps = {
   container: AppContainer;
@@ -31,9 +35,13 @@ const healthRoute = createRoute({
 });
 
 export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
-  const app = new OpenAPIHono();
+  const app = new OpenAPIHono<{
+    Variables: AuthVariables;
+  }>();
 
   app.onError(makeHonoErrorHandler());
+
+  app.use("*", fakeAuthMiddleware);
 
   app.doc("/doc", {
     openapi: "3.0.0",

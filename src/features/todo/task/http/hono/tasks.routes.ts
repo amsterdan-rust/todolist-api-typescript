@@ -7,9 +7,12 @@ import { listTasksRoute } from "./list-tasks.route";
 import { taskMutationPresenter } from "./task-mutation.presenter";
 import { taskPresenter } from "./task.presenter";
 import { updateTaskRoute } from "./update-task.route";
+import type { AuthVariables } from "@app/http/hono/middlewares/fake-auth.middleware";
 
 type RegisterTaskRoutesDeps = {
-  app: OpenAPIHono;
+  app: OpenAPIHono<{
+    Variables: AuthVariables;
+  }>;
   container: AppContainer;
 };
 
@@ -19,9 +22,10 @@ export const registerTaskRoutes = ({
 }: RegisterTaskRoutesDeps) => {
   app.openapi(createTaskRoute, async (context) => {
     const body = context.req.valid("json");
+    const auth = context.get("auth");
 
     const task = await container.taskUseCases.createTask({
-      userId: body.userId,
+      userId: auth.userId,
       categoryId: body.categoryId ?? null,
       title: body.title,
       description: body.description ?? null,
@@ -32,9 +36,10 @@ export const registerTaskRoutes = ({
 
   app.openapi(listTasksRoute, async (context) => {
     const query = context.req.valid("query");
+    const auth = context.get("auth");
 
     const tasks = await container.taskUseCases.listTasks({
-      userId: query.userId,
+      userId: auth.userId,
       ...(query.status !== undefined && { status: query.status }),
       ...(query.categoryId !== undefined && { categoryId: query.categoryId }),
       ...(query.title !== undefined && { title: query.title }),
