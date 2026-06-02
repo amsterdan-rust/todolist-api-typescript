@@ -1,6 +1,6 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
 
-import type { AppContainer } from "../../../../container";
+import type { AppContainer } from "@app/container";
 import { createTaskRoute } from "./create-task.route";
 import { listTasksRoute } from "./list-tasks.route";
 import { taskPresenter } from "./task.presenter";
