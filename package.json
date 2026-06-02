@@ -2,6 +2,7 @@
   "name": "todolist-api",
   "type": "module",
   "scripts": {
+    "dev": "bun run --hot src/app/app.ts",
     "test": "bun test",
     "test:coverage": "bun test --coverage"
   },
