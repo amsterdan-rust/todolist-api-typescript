@@ -2,9 +2,11 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 
 import type { AppContainer } from "@app/container";
 import { createTaskRoute } from "./create-task.route";
-import { listTasksRoute } from "./list-tasks.route";
-import { taskPresenter } from "./task.presenter";
 import { getTaskRoute } from "./get-task.route";
+import { listTasksRoute } from "./list-tasks.route";
+import { taskMutationPresenter } from "./task-mutation.presenter";
+import { taskPresenter } from "./task.presenter";
+import { updateTaskRoute } from "./update-task.route";
 
 type RegisterTaskRoutesDeps = {
   app: OpenAPIHono;
@@ -53,5 +55,23 @@ export const registerTaskRoutes = ({
     });
 
     return context.json(taskPresenter.toHttp(task), 200);
+  });
+
+  app.openapi(updateTaskRoute, async (context) => {
+    const params = context.req.valid("param");
+    const body = context.req.valid("json");
+
+    const result = await container.taskUseCases.updateTask({
+      id: params.id,
+      ...(body.title !== undefined && { title: body.title }),
+      ...(body.description !== undefined && {
+        description: body.description,
+      }),
+      ...(body.categoryId !== undefined && {
+        categoryId: body.categoryId,
+      }),
+    });
+
+    return context.json(taskMutationPresenter.toHttp(result), 200);
   });
 };
