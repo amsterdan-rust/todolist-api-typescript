@@ -1,0 +1,2 @@
+export const CATEGORY_NAME_MIN_LENGTH = 1;
+export const CATEGORY_NAME_MAX_LENGTH = 80;
