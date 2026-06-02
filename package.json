@@ -8,6 +8,8 @@
   },
   "private": true,
   "dependencies": {
+    "@hono/zod-openapi": "^1.4.0",
+    "@scalar/hono-api-reference": "^0.10.20",
     "hono": "^4.12.23",
     "zod": "^4.4.3"
   },

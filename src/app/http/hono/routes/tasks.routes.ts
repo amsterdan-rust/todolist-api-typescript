@@ -1,26 +1,65 @@
-import { z } from "zod";
-import type { Hono } from "hono";
+import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
 
 import type { AppContainer } from "../../../container";
 
 type RegisterTaskRoutesDeps = {
-  app: Hono;
+  app: OpenAPIHono;
   container: AppContainer;
 };
 
+const taskResponseSchema = z.object({
+  id: z.string().uuid(),
+  userId: z.string().uuid(),
+  categoryId: z.string().uuid().nullable(),
+  title: z.string(),
+  description: z.string().nullable(),
+  status: z.enum(["pending", "done"]),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
 const createTaskBodySchema = z.object({
-  userId: z.uuid(),
-  categoryId: z.uuid().nullable().optional(),
+  userId: z.string().uuid(),
+  categoryId: z.string().uuid().nullable().optional(),
   title: z.string().trim().min(1).max(120),
   description: z.string().trim().max(500).nullable().optional(),
+});
+
+const createTaskRoute = createRoute({
+  method: "post",
+  path: "/tasks",
+  tags: ["Tasks"],
+  summary: "Create task",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: createTaskBodySchema,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: "Task created",
+      content: {
+        "application/json": {
+          schema: taskResponseSchema,
+        },
+      },
+    },
+    400: {
+      description: "Validation error",
+    },
+  },
 });
 
 export const registerTaskRoutes = ({
   app,
   container,
 }: RegisterTaskRoutesDeps) => {
-  app.post("/tasks", async (context) => {
-    const body = createTaskBodySchema.parse(await context.req.json());
+  app.openapi(createTaskRoute, async (context) => {
+    const body = context.req.valid("json");
 
     const task = await container.taskUseCases.createTask({
       userId: body.userId,
