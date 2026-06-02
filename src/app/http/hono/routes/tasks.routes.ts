@@ -82,6 +82,55 @@ const createTaskRoute = createRoute({
   },
 });
 
+const listTasksQuerySchema = z.object({
+  userId: z.uuid().openapi({
+    example: "0195f6f9-391f-7000-8000-000000000002",
+  }),
+
+  status: z.enum(["pending", "done"]).optional().openapi({
+    example: "pending",
+  }),
+
+  categoryId: z.uuid().nullable().optional().openapi({
+    example: null,
+  }),
+
+  title: z.string().optional().openapi({
+    example: "pão",
+  }),
+
+  orderBy: z.enum(["createdAt", "updatedAt"]).optional().openapi({
+    example: "createdAt",
+  }),
+
+  orderDirection: z.enum(["asc", "desc"]).optional().openapi({
+    example: "desc",
+  }),
+});
+
+const listTasksRoute = createRoute({
+  method: "get",
+  path: "/tasks",
+  tags: ["Tasks"],
+  summary: "List tasks",
+  request: {
+    query: listTasksQuerySchema,
+  },
+  responses: {
+    200: {
+      description: "Tasks listed",
+      content: {
+        "application/json": {
+          schema: z.array(taskResponseSchema),
+        },
+      },
+    },
+    400: {
+      description: "Validation error",
+    },
+  },
+});
+
 export const registerTaskRoutes = ({
   app,
   container,
@@ -97,5 +146,22 @@ export const registerTaskRoutes = ({
     });
 
     return context.json(taskPresenter.toHttp(task), 201);
+  });
+
+  app.openapi(listTasksRoute, async (context) => {
+    const query = context.req.valid("query");
+
+    const tasks = await container.taskUseCases.listTasks({
+      userId: query.userId,
+      ...(query.status !== undefined && { status: query.status }),
+      ...(query.categoryId !== undefined && { categoryId: query.categoryId }),
+      ...(query.title !== undefined && { title: query.title }),
+      ...(query.orderBy !== undefined && { orderBy: query.orderBy }),
+      ...(query.orderDirection !== undefined && {
+        orderDirection: query.orderDirection,
+      }),
+    });
+
+    return context.json(tasks.map(taskPresenter.toHttp), 200);
   });
 };
