@@ -52,7 +52,7 @@ export const registerTaskRoutes = ({
       }),
     });
 
-    return context.json(tasks.map(taskPresenter.toHttp), 200);
+    return context.json({ tasks: tasks.map(taskPresenter.toHttp) }, 200);
   });
 
   app.openapi(getTaskRoute, async (context) => {
