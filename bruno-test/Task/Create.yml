@@ -1,0 +1,24 @@
+info:
+  name: Create
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/tasks"
+  body:
+    type: json
+    data: |-
+      {
+        "userId": "0195f6f9-391f-7000-8000-000000000002",
+        "title": "Comprar pão",
+        "description": "Ir na padaria",
+        "categoryId": null
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
