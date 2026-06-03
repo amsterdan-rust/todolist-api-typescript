@@ -1,13 +1,14 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { Scalar } from "@scalar/hono-api-reference";
 
-import type { AppContainer } from "../../container";
+import type { AppContainer } from "@app/container";
 import { makeHonoErrorHandler } from "./hono-error-handler";
-import { registerTaskRoutes } from "@/features/todo/task/http/hono/routes/tasks.routes";
+import { registerTaskRoutes } from "@features/todo/task/http/hono/routes/tasks.routes";
 import {
   fakeAuthMiddleware,
   type AuthVariables,
 } from "./middlewares/fake-auth.middleware";
+import { registerCategoryRoutes } from "@/features/todo/category/http/hono/routes/categories.routes";
 
 type MakeHonoAppDeps = {
   container: AppContainer;
@@ -82,6 +83,11 @@ export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
   app.use("/categories/*", fakeAuthMiddleware);
 
   registerTaskRoutes({
+    app,
+    container,
+  });
+
+  registerCategoryRoutes({
     app,
     container,
   });
