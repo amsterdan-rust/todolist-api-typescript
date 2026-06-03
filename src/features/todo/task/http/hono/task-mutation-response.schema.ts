@@ -9,3 +9,5 @@ export const taskMutationResponseSchema = z.object({
     example: "2026-01-01T00:00:00.000Z",
   }),
 });
+
+export type TaskMutationResponse = z.infer<typeof taskMutationResponseSchema>;

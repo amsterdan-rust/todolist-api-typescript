@@ -1,15 +1,5 @@
 import type { Task } from "@todo/task/domain/task.schema";
-
-export type TaskResponse = {
-  id: string;
-  userId: string;
-  categoryId: string | null;
-  title: string;
-  description: string | null;
-  status: "pending" | "done";
-  createdAt: string;
-  updatedAt: string;
-};
+import type { TaskResponse } from "./task-response.schema";
 
 export const taskPresenter = {
   toHttp: (task: Task): TaskResponse => ({

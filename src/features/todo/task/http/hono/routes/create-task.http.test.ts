@@ -2,6 +2,9 @@ import { describe, expect, it } from "bun:test";
 
 import { makeContainer } from "@app/container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
+import { readJson } from "@app/http/hono/http-test-helpers";
+import type { TaskResponse } from "../task-response.schema";
+import type { ValidationErrorHttpResponse } from "@app/http/hono/http-test-types";
 
 const fakeAuthUserId = "0195f6f9-391f-7000-8000-000000000002";
 
@@ -28,7 +31,7 @@ describe("POST /tasks", () => {
 
     expect(response.status).toBe(201);
 
-    const body = await response.json();
+    const body = await readJson<TaskResponse>(response);
 
     expect(body).toEqual({
       id: expect.any(String),
@@ -60,7 +63,7 @@ describe("POST /tasks", () => {
 
     expect(response.status).toBe(201);
 
-    const body = await response.json();
+    const body = await readJson<TaskResponse>(response);
 
     expect(body.userId).toBe(fakeAuthUserId);
   });
@@ -82,7 +85,7 @@ describe("POST /tasks", () => {
 
     expect(response.status).toBe(400);
 
-    const body = await response.json();
+    const body = await readJson<ValidationErrorHttpResponse>(response);
 
     expect(body.message).toBe("Validation error");
     expect(body.issues).toBeArray();
@@ -105,7 +108,7 @@ describe("POST /tasks", () => {
 
     expect(response.status).toBe(400);
 
-    const body = await response.json();
+    const body = await readJson<ValidationErrorHttpResponse>(response);
 
     expect(body.message).toBe("Validation error");
     expect(body.issues).toBeArray();
@@ -128,7 +131,7 @@ describe("POST /tasks", () => {
 
     expect(response.status).toBe(400);
 
-    const body = await response.json();
+    const body = await readJson<ValidationErrorHttpResponse>(response);
 
     expect(body.message).toBe("Validation error");
     expect(body.issues).toBeArray();
@@ -150,7 +153,7 @@ describe("POST /tasks", () => {
 
     expect(response.status).toBe(400);
 
-    const body = await response.json();
+    const body = await readJson<ValidationErrorHttpResponse>(response);
 
     expect(body.message).toBe("Validation error");
     expect(body.issues).toBeArray();
