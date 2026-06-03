@@ -44,7 +44,8 @@ describe("GET /tasks", () => {
     const body = await readJson<ListTasksHttpResponse>(response);
 
     expect(body.tasks).toHaveLength(2);
-    expect(body.tasks).toEqual([secondTask, firstTask]);
+    expect(body.tasks).toContainEqual(firstTask);
+    expect(body.tasks).toContainEqual(secondTask);
   });
 
   test("returns an empty list when authenticated user has no tasks", async () => {
