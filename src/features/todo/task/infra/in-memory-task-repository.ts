@@ -32,8 +32,10 @@ export const makeInMemoryTaskRepository = (
     state.tasks.find((task) => task.id === id && task.userId === userId) ??
     null,
 
-  complete: async ({ id, updatedAt }) => {
-    const taskIndex = state.tasks.findIndex((task) => task.id === id);
+  complete: async ({ id, userId, updatedAt }) => {
+    const taskIndex = state.tasks.findIndex(
+      (task) => task.id === id && task.userId === userId,
+    );
 
     const task = state.tasks[taskIndex];
 
@@ -53,8 +55,10 @@ export const makeInMemoryTaskRepository = (
     };
   },
 
-  reopen: async ({ id, updatedAt }) => {
-    const taskIndex = state.tasks.findIndex((task) => task.id === id);
+  reopen: async ({ id, userId, updatedAt }) => {
+    const taskIndex = state.tasks.findIndex(
+      (task) => task.id === id && task.userId === userId,
+    );
 
     const task = state.tasks[taskIndex];
 

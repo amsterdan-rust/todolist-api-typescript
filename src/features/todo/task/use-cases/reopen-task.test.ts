@@ -32,6 +32,7 @@ describe("reopenTask", () => {
 
     await completeTask({
       id: task.id,
+      userId: task.userId,
     });
 
     const reopenTask = makeReopenTask({
@@ -43,6 +44,7 @@ describe("reopenTask", () => {
 
     const result = await reopenTask({
       id: task.id,
+      userId: task.userId,
     });
 
     expect(result).toEqual({
@@ -70,7 +72,43 @@ describe("reopenTask", () => {
     expect(
       reopenTask({
         id: "0195f6f9-391f-7000-8000-000000000001",
+        userId: "0195f6f9-391f-7000-8000-000000000002",
       }),
     ).rejects.toThrow("Task not found");
+  });
+
+  it("throws when task belongs to another user", async () => {
+    const createdAt = new Date("2026-01-01T00:00:00.000Z");
+
+    const taskRepository = makeInMemoryTaskRepository();
+
+    const task = {
+      ...makeTask({
+        id: "0195f6f9-391f-7000-8000-000000000001",
+        userId: "0195f6f9-391f-7000-8000-000000000002",
+        title: "Comprar pão",
+        createdAt,
+        updatedAt: createdAt,
+      }),
+      status: "done" as const,
+    };
+
+    await taskRepository.create(task);
+
+    const reopenTask = makeReopenTask({
+      taskRepository,
+      clock: {
+        now: () => new Date("2026-01-03T00:00:00.000Z"),
+      },
+    });
+
+    expect(
+      reopenTask({
+        id: task.id,
+        userId: "0195f6f9-391f-7000-8000-000000000003",
+      }),
+    ).rejects.toThrow("Task not found");
+
+    expect(taskRepository.items[0]).toEqual(task);
   });
 });

@@ -2,12 +2,13 @@ import type { Clock } from "@shared/clock";
 
 import { taskError } from "../domain/task.errors";
 import type {
-  TaskRepositoryMutationResult,
   TaskRepository,
+  TaskRepositoryMutationResult,
 } from "../ports/task-repository";
 
 type CompleteTaskInput = {
   id: string;
+  userId: string;
 };
 
 type CompleteTaskDeps = {
@@ -21,8 +22,11 @@ export type CompleteTask = (
 
 export const makeCompleteTask =
   ({ taskRepository, clock }: CompleteTaskDeps): CompleteTask =>
-  async ({ id }) => {
-    const taskExists = await taskRepository.existsById(id);
+  async ({ id, userId }) => {
+    const taskExists = await taskRepository.existsByIdAndUserId({
+      id,
+      userId,
+    });
 
     if (!taskExists) {
       throw taskError.NotFound();
@@ -30,6 +34,7 @@ export const makeCompleteTask =
 
     return taskRepository.complete({
       id,
+      userId,
       updatedAt: clock.now(),
     });
   };

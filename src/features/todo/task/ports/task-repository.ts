@@ -7,11 +7,13 @@ export type TaskRepositoryMutationResult = {
 
 export type CompleteTaskRecordInput = {
   id: string;
+  userId: string;
   updatedAt: Date;
 };
 
 export type ReopenTaskRecordInput = {
   id: string;
+  userId: string;
   updatedAt: Date;
 };
 

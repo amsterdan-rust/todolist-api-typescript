@@ -30,6 +30,7 @@ describe("completeTask", () => {
 
     const result = await completeTask({
       id: task.id,
+      userId: task.userId,
     });
 
     expect(result).toEqual({
@@ -57,7 +58,40 @@ describe("completeTask", () => {
     expect(
       completeTask({
         id: "0195f6f9-391f-7000-8000-000000000001",
+        userId: "0195f6f9-391f-7000-8000-000000000002",
       }),
     ).rejects.toThrow("Task not found");
+  });
+
+  it("throws when task belongs to another user", async () => {
+    const createdAt = new Date("2026-01-01T00:00:00.000Z");
+
+    const taskRepository = makeInMemoryTaskRepository();
+
+    const task = makeTask({
+      id: "0195f6f9-391f-7000-8000-000000000001",
+      userId: "0195f6f9-391f-7000-8000-000000000002",
+      title: "Comprar pão",
+      createdAt,
+      updatedAt: createdAt,
+    });
+
+    await taskRepository.create(task);
+
+    const completeTask = makeCompleteTask({
+      taskRepository,
+      clock: {
+        now: () => new Date("2026-01-02T00:00:00.000Z"),
+      },
+    });
+
+    expect(
+      completeTask({
+        id: task.id,
+        userId: "0195f6f9-391f-7000-8000-000000000003",
+      }),
+    ).rejects.toThrow("Task not found");
+
+    expect(taskRepository.items[0]).toEqual(task);
   });
 });

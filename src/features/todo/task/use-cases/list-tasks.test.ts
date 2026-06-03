@@ -71,6 +71,7 @@ describe("listTasks", () => {
 
     await completeTask({
       id: doneTask.id,
+      userId: doneTask.userId,
     });
 
     const listTasks = makeListTasks({ taskRepository });

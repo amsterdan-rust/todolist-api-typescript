@@ -165,6 +165,7 @@ describe("updateTask", () => {
 
     await completeTask({
       id: task.id,
+      userId: task.userId,
     });
 
     const updateTask = makeUpdateTask({
