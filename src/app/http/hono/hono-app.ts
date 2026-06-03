@@ -37,7 +37,19 @@ const healthRoute = createRoute({
 export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
   const app = new OpenAPIHono<{
     Variables: AuthVariables;
-  }>();
+  }>({
+    defaultHook: (result, context) => {
+      if (!result.success) {
+        return context.json(
+          {
+            message: "Validation error",
+            issues: result.error.issues,
+          },
+          400,
+        );
+      }
+    },
+  });
 
   app.onError(makeHonoErrorHandler());
 
