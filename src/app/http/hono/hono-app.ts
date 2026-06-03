@@ -41,8 +41,6 @@ export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
 
   app.onError(makeHonoErrorHandler());
 
-  app.use("*", fakeAuthMiddleware);
-
   app.doc("/doc", {
     openapi: "3.0.0",
     info: {
@@ -64,6 +62,12 @@ export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
       status: "ok",
     }),
   );
+
+  app.use("/tasks", fakeAuthMiddleware);
+  app.use("/tasks/*", fakeAuthMiddleware);
+
+  app.use("/categories", fakeAuthMiddleware);
+  app.use("/categories/*", fakeAuthMiddleware);
 
   registerTaskRoutes({
     app,
