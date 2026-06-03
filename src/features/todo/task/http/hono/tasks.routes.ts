@@ -1,13 +1,13 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
 
 import type { AppContainer } from "@app/container";
+import type { AuthVariables } from "@app/http/hono/middlewares/fake-auth.middleware";
 import { createTaskRoute } from "./create-task.route";
 import { getTaskRoute } from "./get-task.route";
 import { listTasksRoute } from "./list-tasks.route";
 import { taskMutationPresenter } from "./task-mutation.presenter";
 import { taskPresenter } from "./task.presenter";
 import { updateTaskRoute } from "./update-task.route";
-import type { AuthVariables } from "@app/http/hono/middlewares/fake-auth.middleware";
 
 type RegisterTaskRoutesDeps = {
   app: OpenAPIHono<{
@@ -54,9 +54,11 @@ export const registerTaskRoutes = ({
 
   app.openapi(getTaskRoute, async (context) => {
     const params = context.req.valid("param");
+    const auth = context.get("auth");
 
     const task = await container.taskUseCases.getTask({
       id: params.id,
+      userId: auth.userId,
     });
 
     return context.json(taskPresenter.toHttp(task), 200);
@@ -65,9 +67,11 @@ export const registerTaskRoutes = ({
   app.openapi(updateTaskRoute, async (context) => {
     const params = context.req.valid("param");
     const body = context.req.valid("json");
+    const auth = context.get("auth");
 
     const result = await container.taskUseCases.updateTask({
       id: params.id,
+      userId: auth.userId,
       ...(body.title !== undefined && { title: body.title }),
       ...(body.description !== undefined && {
         description: body.description,

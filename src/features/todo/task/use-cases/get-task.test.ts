@@ -5,7 +5,7 @@ import { makeInMemoryTaskRepository } from "../infra/in-memory-task-repository";
 import { makeGetTask } from "./get-task";
 
 describe("getTask", () => {
-  it("returns a task by id", async () => {
+  it("returns a task by id and userId", async () => {
     const date = new Date("2026-01-01T00:00:00.000Z");
 
     const taskRepository = makeInMemoryTaskRepository();
@@ -26,6 +26,7 @@ describe("getTask", () => {
 
     const foundTask = await getTask({
       id: task.id,
+      userId: task.userId,
     });
 
     expect(foundTask).toEqual(task);
@@ -41,6 +42,34 @@ describe("getTask", () => {
     expect(
       getTask({
         id: "0195f6f9-391f-7000-8000-000000000001",
+        userId: "0195f6f9-391f-7000-8000-000000000002",
+      }),
+    ).rejects.toThrow("Task not found");
+  });
+
+  it("throws when task belongs to another user", async () => {
+    const date = new Date("2026-01-01T00:00:00.000Z");
+
+    const taskRepository = makeInMemoryTaskRepository();
+
+    const task = makeTask({
+      id: "0195f6f9-391f-7000-8000-000000000001",
+      userId: "0195f6f9-391f-7000-8000-000000000002",
+      title: "Comprar pão",
+      createdAt: date,
+      updatedAt: date,
+    });
+
+    await taskRepository.create(task);
+
+    const getTask = makeGetTask({
+      taskRepository,
+    });
+
+    expect(
+      getTask({
+        id: task.id,
+        userId: "0195f6f9-391f-7000-8000-000000000003",
       }),
     ).rejects.toThrow("Task not found");
   });

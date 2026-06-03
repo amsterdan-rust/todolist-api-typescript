@@ -17,6 +17,7 @@ export type ReopenTaskRecordInput = {
 
 export type UpdateTaskRecordInput = {
   id: string;
+  userId: string;
   title?: string;
   description?: string | null;
   categoryId?: string | null;
@@ -37,11 +38,19 @@ export type RemoveCategoryFromTaskRecordsInput = {
   updatedAt: Date;
 };
 
+export type FindTaskRecordInput = {
+  id: string;
+  userId: string;
+};
+
 export type TaskRepository = {
   create: (task: Task) => Promise<Task>;
 
   existsById: (id: string) => Promise<boolean>;
   findById: (id: string) => Promise<Task | null>;
+
+  existsByIdAndUserId: (input: FindTaskRecordInput) => Promise<boolean>;
+  findByIdAndUserId: (input: FindTaskRecordInput) => Promise<Task | null>;
 
   complete: (
     input: CompleteTaskRecordInput,

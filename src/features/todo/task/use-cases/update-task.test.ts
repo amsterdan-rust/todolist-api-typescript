@@ -33,6 +33,7 @@ describe("updateTask", () => {
 
     const result = await updateTask({
       id: task.id,
+      userId: task.userId,
       title: "Comprar leite",
       description: "Comprar leite integral",
       categoryId: "0195f6f9-391f-7000-8000-000000000003",
@@ -79,6 +80,7 @@ describe("updateTask", () => {
 
     const result = await updateTask({
       id: task.id,
+      userId: task.userId,
     });
 
     expect(result).toEqual({
@@ -119,6 +121,7 @@ describe("updateTask", () => {
 
     const result = await updateTask({
       id: task.id,
+      userId: task.userId,
       description: null,
       categoryId: null,
     });
@@ -173,6 +176,7 @@ describe("updateTask", () => {
 
     const result = await updateTask({
       id: task.id,
+      userId: task.userId,
       title: "Comprar leite",
     });
 
@@ -202,9 +206,43 @@ describe("updateTask", () => {
     expect(
       updateTask({
         id: "0195f6f9-391f-7000-8000-000000000001",
+        userId: "0195f6f9-391f-7000-8000-000000000002",
         title: "Comprar leite",
       }),
     ).rejects.toThrow("Task not found");
+  });
+
+  it("throws when task belongs to another user", async () => {
+    const createdAt = new Date("2026-01-01T00:00:00.000Z");
+
+    const taskRepository = makeInMemoryTaskRepository();
+
+    const task = makeTask({
+      id: "0195f6f9-391f-7000-8000-000000000001",
+      userId: "0195f6f9-391f-7000-8000-000000000002",
+      title: "Comprar pão",
+      createdAt,
+      updatedAt: createdAt,
+    });
+
+    await taskRepository.create(task);
+
+    const updateTask = makeUpdateTask({
+      taskRepository,
+      clock: {
+        now: () => new Date("2026-01-02T00:00:00.000Z"),
+      },
+    });
+
+    expect(
+      updateTask({
+        id: task.id,
+        userId: "0195f6f9-391f-7000-8000-000000000003",
+        title: "Comprar leite",
+      }),
+    ).rejects.toThrow("Task not found");
+
+    expect(taskRepository.items[0]).toEqual(task);
   });
 
   it("rejects invalid title", () => {
@@ -232,6 +270,7 @@ describe("updateTask", () => {
     expect(
       updateTask({
         id: task.id,
+        userId: task.userId,
         title: "",
       }),
     ).rejects.toThrow();

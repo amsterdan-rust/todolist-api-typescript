@@ -2,12 +2,13 @@ import type { Clock } from "@shared/clock";
 
 import { taskError } from "../domain/task.errors";
 import type {
-  TaskRepositoryMutationResult,
   TaskRepository,
+  TaskRepositoryMutationResult,
 } from "../ports/task-repository";
 
 type UpdateTaskInput = {
   id: string;
+  userId: string;
   title?: string;
   description?: string | null;
   categoryId?: string | null;
@@ -24,8 +25,11 @@ export type UpdateTask = (
 
 export const makeUpdateTask =
   ({ taskRepository, clock }: UpdateTaskDeps): UpdateTask =>
-  async ({ id, title, description, categoryId }) => {
-    const taskExists = await taskRepository.existsById(id);
+  async ({ id, userId, title, description, categoryId }) => {
+    const taskExists = await taskRepository.existsByIdAndUserId({
+      id,
+      userId,
+    });
 
     if (!taskExists) {
       throw taskError.NotFound();
@@ -33,6 +37,7 @@ export const makeUpdateTask =
 
     return taskRepository.update({
       id,
+      userId,
       ...(title !== undefined && { title }),
       ...(description !== undefined && { description }),
       ...(categoryId !== undefined && { categoryId }),

@@ -4,6 +4,7 @@ import type { TaskRepository } from "../ports/task-repository";
 
 type GetTaskInput = {
   id: string;
+  userId: string;
 };
 
 type GetTaskDeps = {
@@ -14,8 +15,11 @@ export type GetTask = (input: GetTaskInput) => Promise<Task>;
 
 export const makeGetTask =
   ({ taskRepository }: GetTaskDeps): GetTask =>
-  async ({ id }) => {
-    const task = await taskRepository.findById(id);
+  async ({ id, userId }) => {
+    const task = await taskRepository.findByIdAndUserId({
+      id,
+      userId,
+    });
 
     if (!task) {
       throw taskError.NotFound();
