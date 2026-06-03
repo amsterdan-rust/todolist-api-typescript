@@ -10,6 +10,7 @@ import { taskPresenter } from "./task.presenter";
 import { updateTaskRoute } from "./update-task.route";
 import { completeTaskRoute } from "./complete-task.route";
 import { reopenTaskRoute } from "./reopen-task.route";
+import { deleteTaskRoute } from "./delete-task.route";
 
 type RegisterTaskRoutesDeps = {
   app: OpenAPIHono<{
@@ -108,5 +109,17 @@ export const registerTaskRoutes = ({
     });
 
     return context.json(taskMutationPresenter.toHttp(result), 200);
+  });
+
+  app.openapi(deleteTaskRoute, async (context) => {
+    const params = context.req.valid("param");
+    const auth = context.get("auth");
+
+    await container.taskUseCases.deleteTask({
+      id: params.id,
+      userId: auth.userId,
+    });
+
+    return context.body(null, 204);
   });
 };
