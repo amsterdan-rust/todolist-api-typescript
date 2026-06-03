@@ -8,6 +8,8 @@ import { listTasksRoute } from "./list-tasks.route";
 import { taskMutationPresenter } from "./task-mutation.presenter";
 import { taskPresenter } from "./task.presenter";
 import { updateTaskRoute } from "./update-task.route";
+import { completeTaskRoute } from "./complete-task.route";
+import { reopenTaskRoute } from "./reopen-task.route";
 
 type RegisterTaskRoutesDeps = {
   app: OpenAPIHono<{
@@ -79,6 +81,30 @@ export const registerTaskRoutes = ({
       ...(body.categoryId !== undefined && {
         categoryId: body.categoryId,
       }),
+    });
+
+    return context.json(taskMutationPresenter.toHttp(result), 200);
+  });
+
+  app.openapi(completeTaskRoute, async (context) => {
+    const params = context.req.valid("param");
+    const auth = context.get("auth");
+
+    const result = await container.taskUseCases.completeTask({
+      id: params.id,
+      userId: auth.userId,
+    });
+
+    return context.json(taskMutationPresenter.toHttp(result), 200);
+  });
+
+  app.openapi(reopenTaskRoute, async (context) => {
+    const params = context.req.valid("param");
+    const auth = context.get("auth");
+
+    const result = await container.taskUseCases.reopenTask({
+      id: params.id,
+      userId: auth.userId,
     });
 
     return context.json(taskMutationPresenter.toHttp(result), 200);
