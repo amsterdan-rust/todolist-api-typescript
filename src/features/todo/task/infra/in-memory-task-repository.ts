@@ -110,8 +110,10 @@ export const makeInMemoryTaskRepository = (
     };
   },
 
-  delete: async (id) => {
-    const taskIndex = state.tasks.findIndex((task) => task.id === id);
+  delete: async ({ id, userId }) => {
+    const taskIndex = state.tasks.findIndex(
+      (task) => task.id === id && task.userId === userId,
+    );
 
     if (taskIndex >= 0) {
       state.tasks.splice(taskIndex, 1);

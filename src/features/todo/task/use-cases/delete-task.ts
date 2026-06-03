@@ -3,6 +3,7 @@ import type { TaskRepository } from "../ports/task-repository";
 
 type DeleteTaskInput = {
   id: string;
+  userId: string;
 };
 
 type DeleteTaskDeps = {
@@ -13,12 +14,18 @@ export type DeleteTask = (input: DeleteTaskInput) => Promise<void>;
 
 export const makeDeleteTask =
   ({ taskRepository }: DeleteTaskDeps): DeleteTask =>
-  async ({ id }) => {
-    const taskExists = await taskRepository.existsById(id);
+  async ({ id, userId }) => {
+    const taskExists = await taskRepository.existsByIdAndUserId({
+      id,
+      userId,
+    });
 
     if (!taskExists) {
       throw taskError.NotFound();
     }
 
-    await taskRepository.delete(id);
+    await taskRepository.delete({
+      id,
+      userId,
+    });
   };

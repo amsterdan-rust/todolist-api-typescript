@@ -45,6 +45,11 @@ export type FindTaskRecordInput = {
   userId: string;
 };
 
+export type DeleteTaskRecordInput = {
+  id: string;
+  userId: string;
+};
+
 export type TaskRepository = {
   create: (task: Task) => Promise<Task>;
 
@@ -66,7 +71,7 @@ export type TaskRepository = {
     input: UpdateTaskRecordInput,
   ) => Promise<TaskRepositoryMutationResult>;
 
-  delete: (id: string) => Promise<void>;
+  delete: (input: DeleteTaskRecordInput) => Promise<void>;
 
   list: (input: ListTaskRecordsInput) => Promise<Task[]>;
 
