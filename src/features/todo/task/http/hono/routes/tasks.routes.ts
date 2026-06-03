@@ -5,8 +5,8 @@ import type { AuthVariables } from "@app/http/hono/middlewares/fake-auth.middlew
 import { createTaskRoute } from "./create-task.route";
 import { getTaskRoute } from "./get-task.route";
 import { listTasksRoute } from "./list-tasks.route";
-import { taskMutationPresenter } from "./task-mutation.presenter";
-import { taskPresenter } from "./task.presenter";
+import { taskMutationPresenter } from "../task-mutation.presenter";
+import { taskPresenter } from "../task.presenter";
 import { updateTaskRoute } from "./update-task.route";
 import { completeTaskRoute } from "./complete-task.route";
 import { reopenTaskRoute } from "./reopen-task.route";

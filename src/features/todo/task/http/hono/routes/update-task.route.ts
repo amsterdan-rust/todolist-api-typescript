@@ -5,9 +5,15 @@ import {
   TASK_TITLE_MAX_LENGTH,
   TASK_TITLE_MIN_LENGTH,
 } from "@todo/task/domain/task.constants";
-import { taskResponseSchema } from "./task-response.schema";
+import { taskMutationResponseSchema } from "../task-mutation-response.schema";
 
-const createTaskBodySchema = z.object({
+const updateTaskParamsSchema = z.object({
+  id: z.uuid().openapi({
+    example: "0195f6f9-391f-7000-8000-000000000001",
+  }),
+});
+
+const updateTaskBodySchema = z.object({
   categoryId: z.uuid().nullable().optional().openapi({
     example: null,
   }),
@@ -17,8 +23,9 @@ const createTaskBodySchema = z.object({
     .trim()
     .min(TASK_TITLE_MIN_LENGTH)
     .max(TASK_TITLE_MAX_LENGTH)
+    .optional()
     .openapi({
-      example: "Comprar pão",
+      example: "Comprar leite",
     }),
 
   description: z
@@ -28,35 +35,39 @@ const createTaskBodySchema = z.object({
     .nullable()
     .optional()
     .openapi({
-      example: "Ir na padaria",
+      example: "Comprar leite integral",
     }),
 });
 
-export const createTaskRoute = createRoute({
-  method: "post",
-  path: "/tasks",
+export const updateTaskRoute = createRoute({
+  method: "patch",
+  path: "/tasks/{id}",
   tags: ["Tasks"],
-  summary: "Create task",
+  summary: "Update task",
   request: {
+    params: updateTaskParamsSchema,
     body: {
       content: {
         "application/json": {
-          schema: createTaskBodySchema,
+          schema: updateTaskBodySchema,
         },
       },
     },
   },
   responses: {
-    201: {
-      description: "Task created",
+    200: {
+      description: "Task updated",
       content: {
         "application/json": {
-          schema: taskResponseSchema,
+          schema: taskMutationResponseSchema,
         },
       },
     },
     400: {
       description: "Validation error",
+    },
+    404: {
+      description: "Task not found",
     },
   },
 });
