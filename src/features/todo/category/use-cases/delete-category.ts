@@ -6,6 +6,7 @@ import type { TaskRepository } from "../../task/ports/task-repository";
 
 type DeleteCategoryInput = {
   id: string;
+  userId: string;
 };
 
 type DeleteCategoryDeps = {
@@ -22,8 +23,11 @@ export const makeDeleteCategory =
     taskRepository,
     clock,
   }: DeleteCategoryDeps): DeleteCategory =>
-  async ({ id }) => {
-    const categoryExists = await categoryRepository.existsById(id);
+  async ({ id, userId }) => {
+    const categoryExists = await categoryRepository.existsById({
+      id,
+      userId,
+    });
 
     if (!categoryExists) {
       throw categoryError.NotFound();
@@ -31,8 +35,12 @@ export const makeDeleteCategory =
 
     await taskRepository.removeCategory({
       categoryId: id,
+      userId,
       updatedAt: clock.now(),
     });
 
-    await categoryRepository.delete(id);
+    await categoryRepository.delete({
+      id,
+      userId,
+    });
   };

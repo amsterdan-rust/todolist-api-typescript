@@ -21,15 +21,19 @@ export const makeInMemoryCategoryRepository = (
     return category;
   },
 
-  existsById: async (id) =>
-    state.categories.some((category) => category.id === id),
+  existsById: async ({ id, userId }) =>
+    state.categories.some(
+      (category) => category.id === id && category.userId === userId,
+    ),
 
-  findById: async (id) =>
-    state.categories.find((category) => category.id === id) ?? null,
+  findById: async ({ id, userId }) =>
+    state.categories.find(
+      (category) => category.id === id && category.userId === userId,
+    ) ?? null,
 
-  update: async ({ id, name, updatedAt }) => {
+  update: async ({ id, userId, name, updatedAt }) => {
     const categoryIndex = state.categories.findIndex(
-      (category) => category.id === id,
+      (category) => category.id === id && category.userId === userId,
     );
 
     const category = state.categories[categoryIndex];
@@ -52,9 +56,9 @@ export const makeInMemoryCategoryRepository = (
     };
   },
 
-  delete: async (id) => {
+  delete: async ({ id, userId }) => {
     const categoryIndex = state.categories.findIndex(
-      (category) => category.id === id,
+      (category) => category.id === id && category.userId === userId,
     );
 
     if (categoryIndex >= 0) {

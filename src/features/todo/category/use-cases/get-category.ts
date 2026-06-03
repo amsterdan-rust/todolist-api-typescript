@@ -4,6 +4,7 @@ import type { CategoryRepository } from "../ports/category-repository";
 
 type GetCategoryInput = {
   id: string;
+  userId: string;
 };
 
 type GetCategoryDeps = {
@@ -14,8 +15,11 @@ export type GetCategory = (input: GetCategoryInput) => Promise<Category>;
 
 export const makeGetCategory =
   ({ categoryRepository }: GetCategoryDeps): GetCategory =>
-  async ({ id }) => {
-    const category = await categoryRepository.findById(id);
+  async ({ id, userId }) => {
+    const category = await categoryRepository.findById({
+      id,
+      userId,
+    });
 
     if (!category) {
       throw categoryError.NotFound();

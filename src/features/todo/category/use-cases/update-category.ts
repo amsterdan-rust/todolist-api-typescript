@@ -8,6 +8,7 @@ import type {
 
 type UpdateCategoryInput = {
   id: string;
+  userId: string;
   name: string;
 };
 
@@ -22,8 +23,11 @@ export type UpdateCategory = (
 
 export const makeUpdateCategory =
   ({ categoryRepository, clock }: UpdateCategoryDeps): UpdateCategory =>
-  async ({ id, name }) => {
-    const categoryExists = await categoryRepository.existsById(id);
+  async ({ id, userId, name }) => {
+    const categoryExists = await categoryRepository.existsById({
+      id,
+      userId,
+    });
 
     if (!categoryExists) {
       throw categoryError.NotFound();
@@ -31,6 +35,7 @@ export const makeUpdateCategory =
 
     return categoryRepository.update({
       id,
+      userId,
       name,
       updatedAt: clock.now(),
     });

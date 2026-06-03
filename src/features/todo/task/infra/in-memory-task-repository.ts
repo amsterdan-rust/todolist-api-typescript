@@ -154,11 +154,12 @@ export const makeInMemoryTaskRepository = (
     });
   },
 
-  removeCategory: async ({ categoryId, updatedAt }) => {
+  removeCategory: async ({ categoryId, userId, updatedAt }) => {
     state.tasks.forEach((task, index) => {
-      if (task.categoryId !== categoryId) {
-        return;
-      }
+      const matchesCategoryId = task.categoryId === categoryId;
+      const matchesUserId = task.userId === userId;
+
+      if (!matchesCategoryId || !matchesUserId) return;
 
       state.tasks[index] = {
         ...task,

@@ -5,8 +5,12 @@ export type CategoryRepositoryMutationResult = {
   updatedAt: Date;
 };
 
-export type UpdateCategoryRecordInput = {
+export type CategoryRecordIdentityInput = {
   id: string;
+  userId: string;
+};
+
+export type UpdateCategoryRecordInput = CategoryRecordIdentityInput & {
   name: string;
   updatedAt: Date;
 };
@@ -19,14 +23,14 @@ export type ListCategoryRecordsInput = {
 export type CategoryRepository = {
   create: (category: Category) => Promise<Category>;
 
-  existsById: (id: string) => Promise<boolean>;
-  findById: (id: string) => Promise<Category | null>;
+  existsById: (input: CategoryRecordIdentityInput) => Promise<boolean>;
+  findById: (input: CategoryRecordIdentityInput) => Promise<Category | null>;
 
   update: (
     input: UpdateCategoryRecordInput,
   ) => Promise<CategoryRepositoryMutationResult>;
 
-  delete: (id: string) => Promise<void>;
+  delete: (input: CategoryRecordIdentityInput) => Promise<void>;
 
   list: (input: ListCategoryRecordsInput) => Promise<Category[]>;
 };

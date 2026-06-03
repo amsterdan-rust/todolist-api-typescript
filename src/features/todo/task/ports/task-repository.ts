@@ -37,6 +37,7 @@ export type ListTaskRecordsInput = {
 
 export type RemoveCategoryFromTaskRecordsInput = {
   categoryId: string;
+  userId: string;
   updatedAt: Date;
 };
 
