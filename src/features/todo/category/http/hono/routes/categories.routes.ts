@@ -8,6 +8,7 @@ import { listCategoriesRoute } from "./list-categories.route";
 import { getCategoryRoute } from "./get-category.route";
 import { updateCategoryRoute } from "./update-category.route";
 import { categoryMutationPresenter } from "../category-mutation.presenter";
+import { deleteCategoryRoute } from "./delete-category.route";
 
 type RegisterCategoryRoutesDeps = {
   app: OpenAPIHono<{
@@ -73,5 +74,17 @@ export const registerCategoryRoutes = ({
     });
 
     return context.json(categoryMutationPresenter.toHttp(result), 200);
+  });
+
+  app.openapi(deleteCategoryRoute, async (context) => {
+    const auth = context.get("auth");
+    const params = context.req.valid("param");
+
+    await container.categoryUseCases.deleteCategory({
+      id: params.id,
+      userId: auth.userId,
+    });
+
+    return context.body(null, 204);
   });
 };
