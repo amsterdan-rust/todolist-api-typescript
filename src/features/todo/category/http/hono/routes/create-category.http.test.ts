@@ -27,7 +27,6 @@ describe("POST /categories", () => {
 
     expect(body).toEqual({
       id: expect.any(String),
-      userId: "0195f6f9-391f-7000-8000-000000000002",
       name: "Mercado",
       createdAt: expect.any(String),
       updatedAt: expect.any(String),
@@ -53,7 +52,6 @@ describe("POST /categories", () => {
 
     const body = await readJson<CategoryResponse>(response);
 
-    expect(body.userId).toBe("0195f6f9-391f-7000-8000-000000000002");
     expect(body.name).toBe("Estudos");
   });
 

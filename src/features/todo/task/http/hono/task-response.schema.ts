@@ -4,9 +4,6 @@ export const taskResponseSchema = z.object({
   id: z.uuid().openapi({
     example: "0195f6f9-391f-7000-8000-000000000001",
   }),
-  userId: z.uuid().openapi({
-    example: "0195f6f9-391f-7000-8000-000000000002",
-  }),
   categoryId: z.uuid().nullable().openapi({
     example: null,
   }),

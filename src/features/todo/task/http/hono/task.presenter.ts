@@ -4,7 +4,6 @@ import type { TaskResponse } from "./task-response.schema";
 export const taskPresenter = {
   toHttp: (task: Task): TaskResponse => ({
     id: task.id,
-    userId: task.userId,
     categoryId: task.categoryId,
     title: task.title,
     description: task.description,

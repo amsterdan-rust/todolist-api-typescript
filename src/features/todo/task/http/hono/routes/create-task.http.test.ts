@@ -35,7 +35,6 @@ describe("POST /tasks", () => {
 
     expect(body).toEqual({
       id: expect.any(String),
-      userId: fakeAuthUserId,
       categoryId: null,
       title: "Comprar pão",
       description: "Ir na padaria",
@@ -64,8 +63,6 @@ describe("POST /tasks", () => {
     expect(response.status).toBe(201);
 
     const body = await readJson<TaskResponse>(response);
-
-    expect(body.userId).toBe(fakeAuthUserId);
   });
 
   it("returns validation error when title is empty", async () => {
