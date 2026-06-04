@@ -6,4 +6,16 @@ export const taskError = {
       code: "not_found",
       message: "Task not found",
     }),
+
+  AlreadyCompleted: () =>
+    makeAppError({
+      code: "conflict",
+      message: "Task already completed",
+    }),
+
+  AlreadyPending: () =>
+    makeAppError({
+      code: "conflict",
+      message: "Task already pending",
+    }),
 };

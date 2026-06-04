@@ -23,14 +23,13 @@ export type ReopenTask = (
 export const makeReopenTask =
   ({ taskRepository, clock }: ReopenTaskDeps): ReopenTask =>
   async ({ id, userId }) => {
-    const taskExists = await taskRepository.existsByIdAndUserId({
+    const status = await taskRepository.findStatusByIdAndUserId({
       id,
       userId,
     });
 
-    if (!taskExists) {
-      throw taskError.NotFound();
-    }
+    if (!status) throw taskError.NotFound();
+    if (status === "pending") throw taskError.AlreadyPending();
 
     return taskRepository.reopen({
       id,

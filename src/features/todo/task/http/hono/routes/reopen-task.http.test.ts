@@ -78,4 +78,33 @@ describe("PATCH /tasks/{id}/reopen", () => {
     expect(body.message).toBe("Validation error");
     expect(body.issues.length).toBeGreaterThan(0);
   });
+
+  test("returns conflict when task is already pending", async () => {
+    const container = makeContainer();
+    const app = makeHonoApp({ container });
+
+    const createResponse = await app.request("/tasks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: "Task already pending",
+      }),
+    });
+
+    const createdTask = await readJson<TaskResponse>(createResponse);
+
+    const response = await app.request(`/tasks/${createdTask.id}/reopen`, {
+      method: "PATCH",
+    });
+
+    expect(response.status).toBe(409);
+
+    const body = await readJson<ErrorHttpResponse>(response);
+
+    expect(body).toEqual({
+      message: "Task already pending",
+    });
+  });
 });

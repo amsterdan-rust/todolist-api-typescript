@@ -32,6 +32,10 @@ export const makeInMemoryTaskRepository = (
     state.tasks.find((task) => task.id === id && task.userId === userId) ??
     null,
 
+  findStatusByIdAndUserId: async ({ id, userId }) =>
+    state.tasks.find((task) => task.id === id && task.userId === userId)
+      ?.status ?? null,
+
   complete: async ({ id, userId, updatedAt }) => {
     const taskIndex = state.tasks.findIndex(
       (task) => task.id === id && task.userId === userId,

@@ -111,4 +111,36 @@ describe("reopenTask", () => {
 
     expect(taskRepository.items[0]).toEqual(task);
   });
+
+  it("throws when task is already pending", async () => {
+    const createdAt = new Date("2026-01-01T00:00:00.000Z");
+
+    const taskRepository = makeInMemoryTaskRepository();
+
+    const task = makeTask({
+      id: "0195f6f9-391f-7000-8000-000000000001",
+      userId: "0195f6f9-391f-7000-8000-000000000002",
+      title: "Comprar pão",
+      createdAt,
+      updatedAt: createdAt,
+    });
+
+    await taskRepository.create(task);
+
+    const reopenTask = makeReopenTask({
+      taskRepository,
+      clock: {
+        now: () => new Date("2026-01-03T00:00:00.000Z"),
+      },
+    });
+
+    expect(
+      reopenTask({
+        id: task.id,
+        userId: task.userId,
+      }),
+    ).rejects.toThrow("Task already pending");
+
+    expect(taskRepository.items[0]).toEqual(task);
+  });
 });

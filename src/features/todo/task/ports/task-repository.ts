@@ -59,6 +59,9 @@ export type TaskRepository = {
 
   existsByIdAndUserId: (input: FindTaskRecordInput) => Promise<boolean>;
   findByIdAndUserId: (input: FindTaskRecordInput) => Promise<Task | null>;
+  findStatusByIdAndUserId: (
+    input: FindTaskRecordInput,
+  ) => Promise<TaskStatus | null>;
 
   complete: (
     input: CompleteTaskRecordInput,

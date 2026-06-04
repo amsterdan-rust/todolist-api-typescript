@@ -94,4 +94,39 @@ describe("completeTask", () => {
 
     expect(taskRepository.items[0]).toEqual(task);
   });
+
+  it("throws when task is already completed", async () => {
+    const createdAt = new Date("2026-01-01T00:00:00.000Z");
+
+    const taskRepository = makeInMemoryTaskRepository();
+
+    const task = {
+      ...makeTask({
+        id: "0195f6f9-391f-7000-8000-000000000001",
+        userId: "0195f6f9-391f-7000-8000-000000000002",
+        title: "Comprar pão",
+        createdAt,
+        updatedAt: createdAt,
+      }),
+      status: "done" as const,
+    };
+
+    await taskRepository.create(task);
+
+    const completeTask = makeCompleteTask({
+      taskRepository,
+      clock: {
+        now: () => new Date("2026-01-02T00:00:00.000Z"),
+      },
+    });
+
+    expect(
+      completeTask({
+        id: task.id,
+        userId: task.userId,
+      }),
+    ).rejects.toThrow("Task already completed");
+
+    expect(taskRepository.items[0]).toEqual(task);
+  });
 });

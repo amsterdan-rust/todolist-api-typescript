@@ -74,4 +74,37 @@ describe("PATCH /tasks/{id}/complete", () => {
     expect(body.message).toBe("Validation error");
     expect(body.issues.length).toBeGreaterThan(0);
   });
+
+  test("returns conflict when task is already completed", async () => {
+    const container = makeContainer();
+    const app = makeHonoApp({ container });
+
+    const createResponse = await app.request("/tasks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: "Task already completed",
+      }),
+    });
+
+    const createdTask = await readJson<TaskResponse>(createResponse);
+
+    await app.request(`/tasks/${createdTask.id}/complete`, {
+      method: "PATCH",
+    });
+
+    const response = await app.request(`/tasks/${createdTask.id}/complete`, {
+      method: "PATCH",
+    });
+
+    expect(response.status).toBe(409);
+
+    const body = await readJson<ErrorHttpResponse>(response);
+
+    expect(body).toEqual({
+      message: "Task already completed",
+    });
+  });
 });

@@ -23,14 +23,13 @@ export type CompleteTask = (
 export const makeCompleteTask =
   ({ taskRepository, clock }: CompleteTaskDeps): CompleteTask =>
   async ({ id, userId }) => {
-    const taskExists = await taskRepository.existsByIdAndUserId({
+    const status = await taskRepository.findStatusByIdAndUserId({
       id,
       userId,
     });
 
-    if (!taskExists) {
-      throw taskError.NotFound();
-    }
+    if (!status) throw taskError.NotFound();
+    if (status === "done") throw taskError.AlreadyCompleted();
 
     return taskRepository.complete({
       id,
