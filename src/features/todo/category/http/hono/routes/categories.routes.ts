@@ -4,6 +4,7 @@ import { categoryPresenter } from "../category.presenter";
 import { createCategoryRoute } from "./create-category.route";
 import type { OpenAPIHono } from "@hono/zod-openapi";
 import type { AuthVariables } from "@/app/http/hono/middlewares/fake-auth.middleware";
+import { listCategoriesRoute } from "./list-categories.route";
 
 type RegisterCategoryRoutesDeps = {
   app: OpenAPIHono<{
@@ -26,5 +27,22 @@ export const registerCategoryRoutes = ({
     });
 
     return context.json(categoryPresenter.toHttp(category), 201);
+  });
+
+  app.openapi(listCategoriesRoute, async (context) => {
+    const auth = context.get("auth");
+    const query = context.req.valid("query");
+
+    const categories = await container.categoryUseCases.listCategories({
+      userId: auth.userId,
+      ...(query.name !== undefined && { name: query.name }),
+    });
+
+    return context.json(
+      {
+        categories: categories.map(categoryPresenter.toHttp),
+      },
+      200,
+    );
   });
 };
