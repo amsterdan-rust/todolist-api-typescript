@@ -5,7 +5,7 @@ import {
   TASK_TITLE_MAX_LENGTH,
   TASK_TITLE_MIN_LENGTH,
 } from "@todo/task/domain/task.constants";
-import { taskResponseSchema } from "../task-response.schema";
+import { taskResponseSchema } from "../../responses/task-response.schema";
 
 const createTaskBodySchema = z.object({
   categoryId: z.uuid().nullable().optional().openapi({

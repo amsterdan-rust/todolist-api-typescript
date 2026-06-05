@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test";
 import { makeContainer } from "@app/container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/http/hono/http-test-helpers";
-import type { TaskResponse } from "@todo/task/infra/http/hono/task-response.schema";
+import type { TaskResponse } from "@todo/task/infra/http/hono/responses/task-response.schema";
 
 type ListTasksHttpResponse = {
   tasks: TaskResponse[];

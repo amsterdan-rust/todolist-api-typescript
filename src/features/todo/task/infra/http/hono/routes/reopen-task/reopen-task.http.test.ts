@@ -7,11 +7,11 @@ import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
-import type { TaskMutationResponse } from "@todo/task/infra/http/hono/task-mutation-response.schema";
-import type { TaskResponse } from "@todo/task/infra/http/hono/task-response.schema";
+import type { TaskMutationResponse } from "@todo/task/infra/http/hono/responses/task-mutation-response.schema";
+import type { TaskResponse } from "@todo/task/infra/http/hono/responses/task-response.schema";
 
-describe("PATCH /tasks/{id}/complete", () => {
-  test("completes a task", async () => {
+describe("PATCH /tasks/{id}/reopen", () => {
+  test("reopens a task", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
@@ -21,13 +21,17 @@ describe("PATCH /tasks/{id}/complete", () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: "Task to complete",
+        title: "Task to reopen",
       }),
     });
 
     const createdTask = await readJson<TaskResponse>(createResponse);
 
-    const response = await app.request(`/tasks/${createdTask.id}/complete`, {
+    await app.request(`/tasks/${createdTask.id}/complete`, {
+      method: "PATCH",
+    });
+
+    const response = await app.request(`/tasks/${createdTask.id}/reopen`, {
       method: "PATCH",
     });
 
@@ -44,7 +48,7 @@ describe("PATCH /tasks/{id}/complete", () => {
     const app = makeHonoApp({ container });
 
     const response = await app.request(
-      "/tasks/0195f6f9-391f-7000-8000-000000000999/complete",
+      "/tasks/0195f6f9-391f-7000-8000-000000000999/reopen",
       {
         method: "PATCH",
       },
@@ -63,7 +67,7 @@ describe("PATCH /tasks/{id}/complete", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
-    const response = await app.request("/tasks/invalid-id/complete", {
+    const response = await app.request("/tasks/invalid-id/reopen", {
       method: "PATCH",
     });
 
@@ -75,7 +79,7 @@ describe("PATCH /tasks/{id}/complete", () => {
     expect(body.issues.length).toBeGreaterThan(0);
   });
 
-  test("returns conflict when task is already completed", async () => {
+  test("returns conflict when task is already pending", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
@@ -85,17 +89,13 @@ describe("PATCH /tasks/{id}/complete", () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: "Task already completed",
+        title: "Task already pending",
       }),
     });
 
     const createdTask = await readJson<TaskResponse>(createResponse);
 
-    await app.request(`/tasks/${createdTask.id}/complete`, {
-      method: "PATCH",
-    });
-
-    const response = await app.request(`/tasks/${createdTask.id}/complete`, {
+    const response = await app.request(`/tasks/${createdTask.id}/reopen`, {
       method: "PATCH",
     });
 
@@ -104,7 +104,7 @@ describe("PATCH /tasks/{id}/complete", () => {
     const body = await readJson<ErrorHttpResponse>(response);
 
     expect(body).toEqual({
-      message: "Task already completed",
+      message: "Task already pending",
     });
   });
 });

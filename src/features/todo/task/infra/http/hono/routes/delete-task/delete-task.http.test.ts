@@ -7,10 +7,10 @@ import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
-import type { TaskResponse } from "../task-response.schema";
+import type { TaskResponse } from "@todo/task/infra/http/hono/responses/task-response.schema";
 
-describe("GET /tasks/{id}", () => {
-  test("gets a task by id", async () => {
+describe("DELETE /tasks/{id}", () => {
+  test("deletes a task", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
@@ -20,20 +20,27 @@ describe("GET /tasks/{id}", () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: "Task to get",
-        description: "Task description",
+        title: "Task to delete",
       }),
     });
 
     const createdTask = await readJson<TaskResponse>(createResponse);
 
-    const response = await app.request(`/tasks/${createdTask.id}`);
+    const response = await app.request(`/tasks/${createdTask.id}`, {
+      method: "DELETE",
+    });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(204);
 
-    const body = await readJson<TaskResponse>(response);
+    const getResponse = await app.request(`/tasks/${createdTask.id}`);
 
-    expect(body).toEqual(createdTask);
+    expect(getResponse.status).toBe(404);
+
+    const body = await readJson<ErrorHttpResponse>(getResponse);
+
+    expect(body).toEqual({
+      message: "Task not found",
+    });
   });
 
   test("returns not found when task does not exist", async () => {
@@ -42,6 +49,9 @@ describe("GET /tasks/{id}", () => {
 
     const response = await app.request(
       "/tasks/0195f6f9-391f-7000-8000-000000000999",
+      {
+        method: "DELETE",
+      },
     );
 
     expect(response.status).toBe(404);
@@ -57,7 +67,9 @@ describe("GET /tasks/{id}", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
-    const response = await app.request("/tasks/invalid-id");
+    const response = await app.request("/tasks/invalid-id", {
+      method: "DELETE",
+    });
 
     expect(response.status).toBe(400);
 

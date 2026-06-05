@@ -1,6 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
-import { taskMutationResponseSchema } from "../task-mutation-response.schema";
+import { taskMutationResponseSchema } from "../../responses/task-mutation-response.schema";
 
 const reopenTaskParamsSchema = z.object({
   id: z.uuid().openapi({

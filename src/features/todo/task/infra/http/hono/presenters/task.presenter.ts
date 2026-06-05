@@ -1,5 +1,5 @@
 import type { Task } from "@todo/task/domain/task.schema";
-import type { TaskResponse } from "./task-response.schema";
+import type { TaskResponse } from "../responses/task-response.schema";
 
 export const taskPresenter = {
   toHttp: (task: Task): TaskResponse => ({

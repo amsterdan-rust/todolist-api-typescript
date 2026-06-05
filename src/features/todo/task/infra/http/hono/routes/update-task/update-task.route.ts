@@ -5,7 +5,7 @@ import {
   TASK_TITLE_MAX_LENGTH,
   TASK_TITLE_MIN_LENGTH,
 } from "@todo/task/domain/task.constants";
-import { taskMutationResponseSchema } from "../task-mutation-response.schema";
+import { taskMutationResponseSchema } from "../../responses/task-mutation-response.schema";
 
 const updateTaskParamsSchema = z.object({
   id: z.uuid().openapi({

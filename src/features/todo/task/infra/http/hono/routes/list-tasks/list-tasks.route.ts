@@ -1,6 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
-import { taskResponseSchema } from "../task-response.schema";
+import { taskResponseSchema } from "../../responses/task-response.schema";
 
 const listTasksQuerySchema = z.object({
   status: z.enum(["pending", "done"]).optional().openapi({

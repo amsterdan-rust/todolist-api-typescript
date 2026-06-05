@@ -2,15 +2,15 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 
 import type { AppContainer } from "@app/container";
 import type { AuthVariables } from "@app/http/hono/middlewares/fake-auth.middleware";
-import { createTaskRoute } from "./create-task.route";
-import { getTaskRoute } from "./get-task.route";
-import { listTasksRoute } from "./list-tasks.route";
-import { taskMutationPresenter } from "../task-mutation.presenter";
-import { taskPresenter } from "../task.presenter";
-import { updateTaskRoute } from "./update-task.route";
-import { completeTaskRoute } from "./complete-task.route";
-import { reopenTaskRoute } from "./reopen-task.route";
-import { deleteTaskRoute } from "./delete-task.route";
+import { createTaskRoute } from "./create-task/create-task.route";
+import { getTaskRoute } from "./get-task/get-task.route";
+import { listTasksRoute } from "./list-tasks/list-tasks.route";
+import { taskMutationPresenter } from "../presenters/task-mutation.presenter";
+import { taskPresenter } from "../presenters/task.presenter";
+import { updateTaskRoute } from "./update-task/update-task.route";
+import { completeTaskRoute } from "./complete-task/complete-task.route";
+import { reopenTaskRoute } from "./reopen-task/reopen-task.route";
+import { deleteTaskRoute } from "./delete-task/delete-task.route";
 
 type RegisterTaskRoutesDeps = {
   app: OpenAPIHono<{

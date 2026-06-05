@@ -3,7 +3,7 @@ import { describe, expect, it } from "bun:test";
 import { makeContainer } from "@app/container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/http/hono/http-test-helpers";
-import type { TaskResponse } from "../task-response.schema";
+import type { TaskResponse } from "../../responses/task-response.schema";
 import type { ValidationErrorHttpResponse } from "@app/http/hono/http-test-types";
 
 const fakeAuthUserId = "0195f6f9-391f-7000-8000-000000000002";

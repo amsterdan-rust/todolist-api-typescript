@@ -1,6 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
-import { taskResponseSchema } from "../task-response.schema";
+import { taskResponseSchema } from "../../responses/task-response.schema";
 
 const getTaskParamsSchema = z.object({
   id: z.uuid().openapi({

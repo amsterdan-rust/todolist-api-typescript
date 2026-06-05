@@ -7,10 +7,10 @@ import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
-import type { TaskResponse } from "@todo/task/infra/http/hono/task-response.schema";
+import type { TaskResponse } from "../../responses/task-response.schema";
 
-describe("DELETE /tasks/{id}", () => {
-  test("deletes a task", async () => {
+describe("GET /tasks/{id}", () => {
+  test("gets a task by id", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
@@ -20,27 +20,20 @@ describe("DELETE /tasks/{id}", () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: "Task to delete",
+        title: "Task to get",
+        description: "Task description",
       }),
     });
 
     const createdTask = await readJson<TaskResponse>(createResponse);
 
-    const response = await app.request(`/tasks/${createdTask.id}`, {
-      method: "DELETE",
-    });
+    const response = await app.request(`/tasks/${createdTask.id}`);
 
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(200);
 
-    const getResponse = await app.request(`/tasks/${createdTask.id}`);
+    const body = await readJson<TaskResponse>(response);
 
-    expect(getResponse.status).toBe(404);
-
-    const body = await readJson<ErrorHttpResponse>(getResponse);
-
-    expect(body).toEqual({
-      message: "Task not found",
-    });
+    expect(body).toEqual(createdTask);
   });
 
   test("returns not found when task does not exist", async () => {
@@ -49,9 +42,6 @@ describe("DELETE /tasks/{id}", () => {
 
     const response = await app.request(
       "/tasks/0195f6f9-391f-7000-8000-000000000999",
-      {
-        method: "DELETE",
-      },
     );
 
     expect(response.status).toBe(404);
@@ -67,9 +57,7 @@ describe("DELETE /tasks/{id}", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
-    const response = await app.request("/tasks/invalid-id", {
-      method: "DELETE",
-    });
+    const response = await app.request("/tasks/invalid-id");
 
     expect(response.status).toBe(400);
 

@@ -7,8 +7,8 @@ import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
-import type { TaskMutationResponse } from "@todo/task/infra/http/hono/task-mutation-response.schema";
-import type { TaskResponse } from "@todo/task/infra/http/hono/task-response.schema";
+import type { TaskMutationResponse } from "@todo/task/infra/http/hono/responses/task-mutation-response.schema";
+import type { TaskResponse } from "@todo/task/infra/http/hono/responses/task-response.schema";
 
 describe("PATCH /tasks/{id}", () => {
   test("updates a task", async () => {
