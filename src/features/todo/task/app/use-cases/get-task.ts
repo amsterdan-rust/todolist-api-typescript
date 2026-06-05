@@ -1,6 +1,6 @@
-import { taskError } from "../domain/task.errors";
-import type { Task } from "../domain/task.schema";
-import type { TaskRepository } from "../ports/task-repository";
+import { taskError } from "../../domain/task.errors";
+import type { Task } from "../../domain/task.schema";
+import type { TaskRepository } from "../repositories/task-repository";
 
 type GetTaskInput = {
   id: string;

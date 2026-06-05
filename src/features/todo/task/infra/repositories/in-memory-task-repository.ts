@@ -1,6 +1,6 @@
-import { makeTask } from "../domain/task";
-import type { Task } from "../domain/task.schema";
-import type { TaskRepository } from "../ports/task-repository";
+import { makeTask } from "../../domain/task";
+import type { Task } from "../../domain/task.schema";
+import type { TaskRepository } from "../../app/repositories/task-repository";
 
 type InMemoryTaskRepositoryState = {
   tasks: Task[];

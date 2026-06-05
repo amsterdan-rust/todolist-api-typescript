@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 
 import { makeTask } from "../../task/domain/task";
-import { makeInMemoryTaskRepository } from "../../task/infra/in-memory-task-repository";
+import { makeInMemoryTaskRepository } from "../../task/infra/repositories/in-memory-task-repository";
 import { makeCategory } from "../domain/category";
 import { makeInMemoryCategoryRepository } from "../infra/in-memory-category-repository";
 import { makeDeleteCategory } from "./delete-category";

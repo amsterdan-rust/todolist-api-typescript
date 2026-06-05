@@ -1,5 +1,5 @@
-import type { Task, TaskStatus } from "../domain/task.schema";
-import type { TaskRepository } from "../ports/task-repository";
+import type { Task, TaskStatus } from "../../domain/task.schema";
+import type { TaskRepository } from "../repositories/task-repository";
 
 type ListTasksInput = {
   userId: string;

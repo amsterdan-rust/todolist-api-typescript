@@ -1,4 +1,4 @@
-import type { TaskRepositoryMutationResult } from "@todo/task/ports/task-repository";
+import type { TaskRepositoryMutationResult } from "@todo/task/app/repositories/task-repository";
 
 export type TaskMutationResponse = {
   id: string;

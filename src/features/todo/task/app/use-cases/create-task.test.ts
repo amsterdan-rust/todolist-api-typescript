@@ -3,7 +3,7 @@ import { describe, expect, it } from "bun:test";
 import type { Clock } from "@shared/clock";
 import type { IdGenerator } from "@shared/id-generator";
 
-import { makeInMemoryTaskRepository } from "../infra/in-memory-task-repository";
+import { makeInMemoryTaskRepository } from "../../infra/repositories/in-memory-task-repository";
 import { makeCreateTask } from "./create-task";
 
 describe("createTask", () => {

@@ -7,7 +7,7 @@ import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
-import type { TaskResponse } from "@todo/task/http/hono/task-response.schema";
+import type { TaskResponse } from "@todo/task/infra/http/hono/task-response.schema";
 
 describe("DELETE /tasks/{id}", () => {
   test("deletes a task", async () => {

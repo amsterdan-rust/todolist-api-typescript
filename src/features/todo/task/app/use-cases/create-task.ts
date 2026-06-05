@@ -1,9 +1,9 @@
 import type { Clock } from "@shared/clock";
 import type { IdGenerator } from "@shared/id-generator";
 
-import { makeTask } from "../domain/task";
-import type { Task } from "../domain/task.schema";
-import type { TaskRepository } from "../ports/task-repository";
+import { makeTask } from "../../domain/task";
+import type { Task } from "../../domain/task.schema";
+import type { TaskRepository } from "../repositories/task-repository";
 
 type CreateTaskInput = {
   userId: string;

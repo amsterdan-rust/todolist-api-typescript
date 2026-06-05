@@ -1,10 +1,10 @@
 import type { Clock } from "@shared/clock";
 
-import { taskError } from "../domain/task.errors";
+import { taskError } from "../../domain/task.errors";
 import type {
   TaskRepository,
   TaskRepositoryMutationResult,
-} from "../ports/task-repository";
+} from "../repositories/task-repository";
 
 type UpdateTaskInput = {
   id: string;

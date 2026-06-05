@@ -1,14 +1,14 @@
 import { makeCryptoIdGenerator } from "@shared/id-generator";
 import { makeSystemClock } from "@shared/clock";
 
-import { makeInMemoryTaskRepository } from "@todo/task/infra/in-memory-task-repository";
-import { makeCreateTask } from "@todo/task/use-cases/create-task";
-import { makeCompleteTask } from "@todo/task/use-cases/complete-task";
-import { makeReopenTask } from "@todo/task/use-cases/reopen-task";
-import { makeUpdateTask } from "@todo/task/use-cases/update-task";
-import { makeDeleteTask } from "@todo/task/use-cases/delete-task";
-import { makeListTasks } from "@todo/task/use-cases/list-tasks";
-import { makeGetTask } from "@todo/task/use-cases/get-task";
+import { makeInMemoryTaskRepository } from "@todo/task/infra/repositories/in-memory-task-repository";
+import { makeCreateTask } from "@todo/task/app/use-cases/create-task";
+import { makeCompleteTask } from "@todo/task/app/use-cases/complete-task";
+import { makeReopenTask } from "@todo/task/app/use-cases/reopen-task";
+import { makeUpdateTask } from "@todo/task/app/use-cases/update-task";
+import { makeDeleteTask } from "@todo/task/app/use-cases/delete-task";
+import { makeListTasks } from "@todo/task/app/use-cases/list-tasks";
+import { makeGetTask } from "@todo/task/app/use-cases/get-task";
 
 import { makeInMemoryCategoryRepository } from "@todo/category/infra/in-memory-category-repository";
 import { makeCreateCategory } from "@todo/category/use-cases/create-category";

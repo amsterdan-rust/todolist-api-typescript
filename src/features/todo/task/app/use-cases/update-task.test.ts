@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 
-import { makeTask } from "../domain/task";
-import { makeInMemoryTaskRepository } from "../infra/in-memory-task-repository";
+import { makeTask } from "../../domain/task";
+import { makeInMemoryTaskRepository } from "../../infra/repositories/in-memory-task-repository";
 import { makeCompleteTask } from "./complete-task";
 import { makeUpdateTask } from "./update-task";
 

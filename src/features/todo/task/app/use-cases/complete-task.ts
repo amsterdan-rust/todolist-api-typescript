@@ -1,27 +1,27 @@
 import type { Clock } from "@shared/clock";
 
-import { taskError } from "../domain/task.errors";
+import { taskError } from "../../domain/task.errors";
 import type {
   TaskRepository,
   TaskRepositoryMutationResult,
-} from "../ports/task-repository";
+} from "../repositories/task-repository";
 
-type ReopenTaskInput = {
+type CompleteTaskInput = {
   id: string;
   userId: string;
 };
 
-type ReopenTaskDeps = {
+type CompleteTaskDeps = {
   taskRepository: TaskRepository;
   clock: Clock;
 };
 
-export type ReopenTask = (
-  input: ReopenTaskInput,
+export type CompleteTask = (
+  input: CompleteTaskInput,
 ) => Promise<TaskRepositoryMutationResult>;
 
-export const makeReopenTask =
-  ({ taskRepository, clock }: ReopenTaskDeps): ReopenTask =>
+export const makeCompleteTask =
+  ({ taskRepository, clock }: CompleteTaskDeps): CompleteTask =>
   async ({ id, userId }) => {
     const status = await taskRepository.findStatusByIdAndUserId({
       id,
@@ -29,9 +29,9 @@ export const makeReopenTask =
     });
 
     if (!status) throw taskError.NotFound();
-    if (status === "pending") throw taskError.AlreadyPending();
+    if (status === "done") throw taskError.AlreadyCompleted();
 
-    return taskRepository.reopen({
+    return taskRepository.complete({
       id,
       userId,
       updatedAt: clock.now(),

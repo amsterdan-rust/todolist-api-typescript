@@ -3,7 +3,7 @@ import { Scalar } from "@scalar/hono-api-reference";
 
 import type { AppContainer } from "@app/container";
 import { makeHonoErrorHandler } from "./hono-error-handler";
-import { registerTaskRoutes } from "@features/todo/task/http/hono/routes/tasks.routes";
+import { registerTaskRoutes } from "@features/todo/task/infra/http/hono/routes/tasks.routes";
 import {
   fakeAuthMiddleware,
   type AuthVariables,
