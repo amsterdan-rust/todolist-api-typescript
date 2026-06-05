@@ -8,7 +8,7 @@ import {
   fakeAuthMiddleware,
   type AuthVariables,
 } from "./middlewares/fake-auth.middleware";
-import { registerCategoryRoutes } from "@/features/todo/category/http/hono/routes/categories.routes";
+import { registerCategoryRoutes } from "@todo/category/infra/http/hono/routes/categories.routes";
 
 type MakeHonoAppDeps = {
   container: AppContainer;

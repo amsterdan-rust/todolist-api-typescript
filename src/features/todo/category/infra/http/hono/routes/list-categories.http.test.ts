@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test";
 import { makeContainer } from "@app/container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/http/hono/http-test-helpers";
-import type { CategoryResponse } from "@todo/category/http/hono/category-response.schema";
+import type { CategoryResponse } from "@todo/category/infra/http/hono/category-response.schema";
 
 type ListCategoriesHttpResponse = {
   categories: CategoryResponse[];

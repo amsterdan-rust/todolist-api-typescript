@@ -1,10 +1,10 @@
 import type { Clock } from "@shared/clock";
 
-import { categoryError } from "../domain/category.errors";
+import { categoryError } from "../../domain/category.errors";
 import type {
   CategoryRepositoryMutationResult,
   CategoryRepository,
-} from "../ports/category-repository";
+} from "../repositories/category-repository";
 
 type UpdateCategoryInput = {
   id: string;

@@ -1,6 +1,6 @@
-import { makeCategory } from "../domain/category";
-import type { Category } from "../domain/category.schema";
-import type { CategoryRepository } from "../ports/category-repository";
+import { makeCategory } from "../../domain/category";
+import type { Category } from "../../domain/category.schema";
+import type { CategoryRepository } from "../../app/repositories/category-repository";
 
 type InMemoryCategoryRepositoryState = {
   categories: Category[];

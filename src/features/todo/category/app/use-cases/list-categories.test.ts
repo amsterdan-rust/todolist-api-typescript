@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 
-import { makeCategory } from "../domain/category";
-import { makeInMemoryCategoryRepository } from "../infra/in-memory-category-repository";
+import { makeCategory } from "../../domain/category";
+import { makeInMemoryCategoryRepository } from "../../infra/repositories/in-memory-category-repository";
 import { makeListCategories } from "./list-categories";
 
 describe("listCategories", () => {

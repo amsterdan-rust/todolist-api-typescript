@@ -1,5 +1,5 @@
-import type { Category } from "../domain/category.schema";
-import type { CategoryRepository } from "../ports/category-repository";
+import type { Category } from "../../domain/category.schema";
+import type { CategoryRepository } from "../repositories/category-repository";
 
 type ListCategoriesInput = {
   userId: string;

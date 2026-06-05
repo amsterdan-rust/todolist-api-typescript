@@ -7,8 +7,8 @@ import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
-import type { CategoryMutationResponse } from "@todo/category/http/hono/category-mutation-response.schema";
-import type { CategoryResponse } from "@todo/category/http/hono/category-response.schema";
+import type { CategoryMutationResponse } from "@todo/category/infra/http/hono/category-mutation-response.schema";
+import type { CategoryResponse } from "@todo/category/infra/http/hono/category-response.schema";
 
 describe("PATCH /categories/{id}", () => {
   test("updates a category", async () => {

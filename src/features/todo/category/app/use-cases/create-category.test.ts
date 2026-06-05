@@ -3,7 +3,7 @@ import { describe, expect, it } from "bun:test";
 import type { Clock } from "@shared/clock";
 import type { IdGenerator } from "@shared/id-generator";
 
-import { makeInMemoryCategoryRepository } from "../infra/in-memory-category-repository";
+import { makeInMemoryCategoryRepository } from "../../infra/repositories/in-memory-category-repository";
 import { makeCreateCategory } from "./create-category";
 
 describe("createCategory", () => {

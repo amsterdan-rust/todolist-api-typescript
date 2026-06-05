@@ -1,4 +1,4 @@
-import type { CategoryRepositoryMutationResult } from "@todo/category/ports/category-repository";
+import type { CategoryRepositoryMutationResult } from "@todo/category/app/repositories/category-repository";
 
 import type { CategoryMutationResponse } from "./category-mutation-response.schema";
 

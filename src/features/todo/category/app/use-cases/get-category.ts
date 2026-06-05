@@ -1,6 +1,6 @@
-import { categoryError } from "../domain/category.errors";
-import type { Category } from "../domain/category.schema";
-import type { CategoryRepository } from "../ports/category-repository";
+import { categoryError } from "../../domain/category.errors";
+import type { Category } from "../../domain/category.schema";
+import type { CategoryRepository } from "../repositories/category-repository";
 
 type GetCategoryInput = {
   id: string;

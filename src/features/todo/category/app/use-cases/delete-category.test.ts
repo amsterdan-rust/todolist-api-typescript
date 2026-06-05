@@ -1,17 +1,20 @@
 import { describe, expect, it } from "bun:test";
 
-import { makeCategory } from "../domain/category";
-import { makeInMemoryCategoryRepository } from "../infra/in-memory-category-repository";
-import { makeUpdateCategory } from "./update-category";
+import { makeTask } from "../../../task/domain/task";
+import { makeInMemoryTaskRepository } from "../../../task/infra/repositories/in-memory-task-repository";
+import { makeCategory } from "../../domain/category";
+import { makeInMemoryCategoryRepository } from "../../infra/repositories/in-memory-category-repository";
+import { makeDeleteCategory } from "./delete-category";
 
-describe("updateCategory", () => {
-  it("updates authenticated user category name and returns mutation result", async () => {
+describe("deleteCategory", () => {
+  it("deletes a category and removes it from authenticated user tasks", async () => {
     const createdAt = new Date("2026-01-01T00:00:00.000Z");
-    const updatedAt = new Date("2026-01-02T00:00:00.000Z");
+    const deletedAt = new Date("2026-01-02T00:00:00.000Z");
 
     const userId = "0195f6f9-391f-7000-8000-000000000002";
 
     const categoryRepository = makeInMemoryCategoryRepository();
+    const taskRepository = makeInMemoryTaskRepository();
 
     const category = makeCategory({
       id: "0195f6f9-391f-7000-8000-000000000001",
@@ -21,48 +24,69 @@ describe("updateCategory", () => {
       updatedAt: createdAt,
     });
 
-    await categoryRepository.create(category);
+    const taskWithCategory = makeTask({
+      id: "0195f6f9-391f-7000-8000-000000000003",
+      userId,
+      categoryId: category.id,
+      title: "Comprar pão",
+      createdAt,
+      updatedAt: createdAt,
+    });
 
-    const updateCategory = makeUpdateCategory({
+    const taskWithoutCategory = makeTask({
+      id: "0195f6f9-391f-7000-8000-000000000004",
+      userId,
+      categoryId: null,
+      title: "Estudar TypeScript",
+      createdAt,
+      updatedAt: createdAt,
+    });
+
+    await categoryRepository.create(category);
+    await taskRepository.create(taskWithCategory);
+    await taskRepository.create(taskWithoutCategory);
+
+    const deleteCategory = makeDeleteCategory({
       categoryRepository,
+      taskRepository,
       clock: {
-        now: () => updatedAt,
+        now: () => deletedAt,
       },
     });
 
-    const result = await updateCategory({
+    await deleteCategory({
       id: category.id,
       userId,
-      name: "Estudos",
     });
 
-    expect(result).toEqual({
-      id: category.id,
-      updatedAt,
-    });
+    expect(categoryRepository.items).toHaveLength(0);
 
-    expect(categoryRepository.items[0]).toEqual({
-      ...category,
-      name: "Estudos",
-      updatedAt,
-    });
+    expect(taskRepository.items).toEqual([
+      {
+        ...taskWithCategory,
+        categoryId: null,
+        updatedAt: deletedAt,
+      },
+      taskWithoutCategory,
+    ]);
   });
 
   it("throws when category does not exist", () => {
     const categoryRepository = makeInMemoryCategoryRepository();
+    const taskRepository = makeInMemoryTaskRepository();
 
-    const updateCategory = makeUpdateCategory({
+    const deleteCategory = makeDeleteCategory({
       categoryRepository,
+      taskRepository,
       clock: {
         now: () => new Date("2026-01-02T00:00:00.000Z"),
       },
     });
 
     expect(
-      updateCategory({
+      deleteCategory({
         id: "0195f6f9-391f-7000-8000-000000000001",
         userId: "0195f6f9-391f-7000-8000-000000000002",
-        name: "Estudos",
       }),
     ).rejects.toThrow("Category not found");
   });
@@ -74,6 +98,7 @@ describe("updateCategory", () => {
     const otherUserId = "0195f6f9-391f-7000-8000-000000000003";
 
     const categoryRepository = makeInMemoryCategoryRepository();
+    const taskRepository = makeInMemoryTaskRepository();
 
     const category = makeCategory({
       id: "0195f6f9-391f-7000-8000-000000000001",
@@ -85,54 +110,21 @@ describe("updateCategory", () => {
 
     await categoryRepository.create(category);
 
-    const updateCategory = makeUpdateCategory({
+    const deleteCategory = makeDeleteCategory({
       categoryRepository,
+      taskRepository,
       clock: {
         now: () => new Date("2026-01-02T00:00:00.000Z"),
       },
     });
 
     expect(
-      updateCategory({
+      deleteCategory({
         id: category.id,
         userId: otherUserId,
-        name: "Estudos",
       }),
     ).rejects.toThrow("Category not found");
 
     expect(categoryRepository.items).toEqual([category]);
-  });
-
-  it("rejects invalid category name", async () => {
-    const createdAt = new Date("2026-01-01T00:00:00.000Z");
-
-    const userId = "0195f6f9-391f-7000-8000-000000000002";
-
-    const categoryRepository = makeInMemoryCategoryRepository();
-
-    const category = makeCategory({
-      id: "0195f6f9-391f-7000-8000-000000000001",
-      userId,
-      name: "Mercado",
-      createdAt,
-      updatedAt: createdAt,
-    });
-
-    await categoryRepository.create(category);
-
-    const updateCategory = makeUpdateCategory({
-      categoryRepository,
-      clock: {
-        now: () => new Date("2026-01-02T00:00:00.000Z"),
-      },
-    });
-
-    expect(
-      updateCategory({
-        id: category.id,
-        userId,
-        name: "",
-      }),
-    ).rejects.toThrow();
   });
 });

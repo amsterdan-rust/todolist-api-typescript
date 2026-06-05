@@ -10,12 +10,12 @@ import { makeDeleteTask } from "@todo/task/app/use-cases/delete-task";
 import { makeListTasks } from "@todo/task/app/use-cases/list-tasks";
 import { makeGetTask } from "@todo/task/app/use-cases/get-task";
 
-import { makeInMemoryCategoryRepository } from "@todo/category/infra/in-memory-category-repository";
-import { makeCreateCategory } from "@todo/category/use-cases/create-category";
-import { makeUpdateCategory } from "@todo/category/use-cases/update-category";
-import { makeDeleteCategory } from "@todo/category/use-cases/delete-category";
-import { makeListCategories } from "@todo/category/use-cases/list-categories";
-import { makeGetCategory } from "@todo/category/use-cases/get-category";
+import { makeInMemoryCategoryRepository } from "@todo/category/infra/repositories/in-memory-category-repository";
+import { makeCreateCategory } from "@todo/category/app/use-cases/create-category";
+import { makeUpdateCategory } from "@todo/category/app/use-cases/update-category";
+import { makeDeleteCategory } from "@todo/category/app/use-cases/delete-category";
+import { makeListCategories } from "@todo/category/app/use-cases/list-categories";
+import { makeGetCategory } from "@todo/category/app/use-cases/get-category";
 
 export const makeContainer = () => {
   const clock = makeSystemClock();

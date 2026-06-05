@@ -1,9 +1,9 @@
 import type { Clock } from "@shared/clock";
 import type { IdGenerator } from "@shared/id-generator";
 
-import { makeCategory } from "../domain/category";
-import type { Category } from "../domain/category.schema";
-import type { CategoryRepository } from "../ports/category-repository";
+import { makeCategory } from "../../domain/category";
+import type { Category } from "../../domain/category.schema";
+import type { CategoryRepository } from "../repositories/category-repository";
 
 type CreateCategoryInput = {
   userId: string;

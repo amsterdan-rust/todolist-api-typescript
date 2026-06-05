@@ -7,7 +7,7 @@ import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
-import type { CategoryResponse } from "@todo/category/http/hono/category-response.schema";
+import type { CategoryResponse } from "@todo/category/infra/http/hono/category-response.schema";
 
 describe("GET /categories/{id}", () => {
   test("gets a category by id", async () => {

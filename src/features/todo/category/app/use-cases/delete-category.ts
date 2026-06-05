@@ -1,7 +1,7 @@
 import type { Clock } from "@shared/clock";
 
-import { categoryError } from "../domain/category.errors";
-import type { CategoryRepository } from "../ports/category-repository";
+import { categoryError } from "../../domain/category.errors";
+import type { CategoryRepository } from "../repositories/category-repository";
 import type { TaskRepository } from "../../task/ports/task-repository";
 
 type DeleteCategoryInput = {
