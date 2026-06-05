@@ -1,3 +1,7 @@
+auth.sqlite
+auth.sqlite-shm
+auth.sqlite-wal
+
 # dependencies (bun install)
 node_modules
 
