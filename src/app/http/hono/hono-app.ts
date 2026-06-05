@@ -9,6 +9,7 @@ import {
   type AuthVariables,
 } from "./middlewares/fake-auth.middleware";
 import { registerCategoryRoutes } from "@todo/category/infra/http/hono/routes/categories.routes";
+import { betterAuthHandler } from "@/features/auth/infra/better-auth/better-auth.handler";
 
 type MakeHonoAppDeps = {
   container: AppContainer;
@@ -75,6 +76,8 @@ export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
       status: "ok",
     }),
   );
+
+  app.on(["POST", "GET"], "/auth/*", (c) => betterAuthHandler(c.req.raw));
 
   app.use("/tasks", fakeAuthMiddleware);
   app.use("/tasks/*", fakeAuthMiddleware);
