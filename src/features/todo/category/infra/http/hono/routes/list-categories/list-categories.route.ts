@@ -1,6 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
-import { categoryResponseSchema } from "../category-response.schema";
+import { categoryResponseSchema } from "../../responses/category-response.schema";
 
 const listCategoriesQuerySchema = z.object({
   name: z.string().optional().openapi({

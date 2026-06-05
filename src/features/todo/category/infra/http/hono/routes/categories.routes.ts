@@ -1,14 +1,14 @@
 import type { AppContainer } from "@app/container";
 
-import { categoryPresenter } from "../category.presenter";
-import { createCategoryRoute } from "./create-category.route";
+import { categoryPresenter } from "../presenters/category.presenter";
+import { createCategoryRoute } from "./create-category/create-category.route";
 import type { OpenAPIHono } from "@hono/zod-openapi";
 import type { AuthVariables } from "@/app/http/hono/middlewares/fake-auth.middleware";
-import { listCategoriesRoute } from "./list-categories.route";
-import { getCategoryRoute } from "./get-category.route";
-import { updateCategoryRoute } from "./update-category.route";
-import { categoryMutationPresenter } from "../category-mutation.presenter";
-import { deleteCategoryRoute } from "./delete-category.route";
+import { listCategoriesRoute } from "./list-categories/list-categories.route";
+import { getCategoryRoute } from "./get-category/get-category.route";
+import { updateCategoryRoute } from "./update-category/update-category.route";
+import { categoryMutationPresenter } from "../presenters/category-mutation.presenter";
+import { deleteCategoryRoute } from "./delete-category/delete-category.route";
 
 type RegisterCategoryRoutesDeps = {
   app: OpenAPIHono<{

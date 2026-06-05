@@ -1,6 +1,6 @@
 import type { CategoryRepositoryMutationResult } from "@todo/category/app/repositories/category-repository";
 
-import type { CategoryMutationResponse } from "./category-mutation-response.schema";
+import type { CategoryMutationResponse } from "../responses/category-mutation-response.schema";
 
 export const categoryMutationPresenter = {
   toHttp: ({

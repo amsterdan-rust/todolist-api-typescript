@@ -4,7 +4,7 @@ import { makeContainer } from "@app/container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/http/hono/http-test-helpers";
 import type { ValidationErrorHttpResponse } from "@app/http/hono/http-test-types";
-import type { CategoryResponse } from "@todo/category/infra/http/hono/category-response.schema";
+import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
 
 describe("POST /categories", () => {
   test("creates a category using the authenticated user id", async () => {

@@ -1,6 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
-import { categoryMutationResponseSchema } from "../category-mutation-response.schema";
+import { categoryMutationResponseSchema } from "../../responses/category-mutation-response.schema";
 
 const updateCategoryParamsSchema = z.object({
   id: z.uuid().openapi({

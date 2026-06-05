@@ -7,10 +7,10 @@ import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
-import type { CategoryResponse } from "@todo/category/infra/http/hono/category-response.schema";
+import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
 
-describe("DELETE /categories/{id}", () => {
-  test("deletes a category", async () => {
+describe("GET /categories/{id}", () => {
+  test("gets a category by id", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
@@ -26,21 +26,13 @@ describe("DELETE /categories/{id}", () => {
 
     const createdCategory = await readJson<CategoryResponse>(createResponse);
 
-    const response = await app.request(`/categories/${createdCategory.id}`, {
-      method: "DELETE",
-    });
+    const response = await app.request(`/categories/${createdCategory.id}`);
 
-    expect(response.status).toBe(204);
+    expect(response.status).toBe(200);
 
-    const getResponse = await app.request(`/categories/${createdCategory.id}`);
+    const body = await readJson<CategoryResponse>(response);
 
-    expect(getResponse.status).toBe(404);
-
-    const body = await readJson<ErrorHttpResponse>(getResponse);
-
-    expect(body).toEqual({
-      message: "Category not found",
-    });
+    expect(body).toEqual(createdCategory);
   });
 
   test("returns not found when category does not exist", async () => {
@@ -49,9 +41,6 @@ describe("DELETE /categories/{id}", () => {
 
     const response = await app.request(
       "/categories/0195f6f9-391f-7000-8000-000000000999",
-      {
-        method: "DELETE",
-      },
     );
 
     expect(response.status).toBe(404);
@@ -67,9 +56,7 @@ describe("DELETE /categories/{id}", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
-    const response = await app.request("/categories/invalid-id", {
-      method: "DELETE",
-    });
+    const response = await app.request("/categories/invalid-id");
 
     expect(response.status).toBe(400);
 

@@ -7,10 +7,10 @@ import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
-import type { CategoryResponse } from "@todo/category/infra/http/hono/category-response.schema";
+import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
 
-describe("GET /categories/{id}", () => {
-  test("gets a category by id", async () => {
+describe("DELETE /categories/{id}", () => {
+  test("deletes a category", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
@@ -26,13 +26,21 @@ describe("GET /categories/{id}", () => {
 
     const createdCategory = await readJson<CategoryResponse>(createResponse);
 
-    const response = await app.request(`/categories/${createdCategory.id}`);
+    const response = await app.request(`/categories/${createdCategory.id}`, {
+      method: "DELETE",
+    });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(204);
 
-    const body = await readJson<CategoryResponse>(response);
+    const getResponse = await app.request(`/categories/${createdCategory.id}`);
 
-    expect(body).toEqual(createdCategory);
+    expect(getResponse.status).toBe(404);
+
+    const body = await readJson<ErrorHttpResponse>(getResponse);
+
+    expect(body).toEqual({
+      message: "Category not found",
+    });
   });
 
   test("returns not found when category does not exist", async () => {
@@ -41,6 +49,9 @@ describe("GET /categories/{id}", () => {
 
     const response = await app.request(
       "/categories/0195f6f9-391f-7000-8000-000000000999",
+      {
+        method: "DELETE",
+      },
     );
 
     expect(response.status).toBe(404);
@@ -56,7 +67,9 @@ describe("GET /categories/{id}", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
-    const response = await app.request("/categories/invalid-id");
+    const response = await app.request("/categories/invalid-id", {
+      method: "DELETE",
+    });
 
     expect(response.status).toBe(400);
 
