@@ -25,10 +25,10 @@ export const registerTaskRoutes = ({
 }: RegisterTaskRoutesDeps) => {
   app.openapi(createTaskRoute, async (context) => {
     const body = context.req.valid("json");
-    const auth = context.get("auth");
+    const user = context.get("user");
 
     const task = await container.taskUseCases.createTask({
-      userId: auth.userId,
+      userId: user.id,
       categoryId: body.categoryId ?? null,
       title: body.title,
       description: body.description ?? null,
@@ -39,10 +39,10 @@ export const registerTaskRoutes = ({
 
   app.openapi(listTasksRoute, async (context) => {
     const query = context.req.valid("query");
-    const auth = context.get("auth");
+    const user = context.get("user");
 
     const tasks = await container.taskUseCases.listTasks({
-      userId: auth.userId,
+      userId: user.id,
       ...(query.status !== undefined && { status: query.status }),
       ...(query.categoryId !== undefined && { categoryId: query.categoryId }),
       ...(query.title !== undefined && { title: query.title }),
@@ -57,11 +57,11 @@ export const registerTaskRoutes = ({
 
   app.openapi(getTaskRoute, async (context) => {
     const params = context.req.valid("param");
-    const auth = context.get("auth");
+    const user = context.get("user");
 
     const task = await container.taskUseCases.getTask({
       id: params.id,
-      userId: auth.userId,
+      userId: user.id,
     });
 
     return context.json(taskPresenter.toHttp(task), 200);
@@ -70,11 +70,11 @@ export const registerTaskRoutes = ({
   app.openapi(updateTaskRoute, async (context) => {
     const params = context.req.valid("param");
     const body = context.req.valid("json");
-    const auth = context.get("auth");
+    const user = context.get("user");
 
     const result = await container.taskUseCases.updateTask({
       id: params.id,
-      userId: auth.userId,
+      userId: user.id,
       ...(body.title !== undefined && { title: body.title }),
       ...(body.description !== undefined && {
         description: body.description,
@@ -89,11 +89,11 @@ export const registerTaskRoutes = ({
 
   app.openapi(completeTaskRoute, async (context) => {
     const params = context.req.valid("param");
-    const auth = context.get("auth");
+    const user = context.get("user");
 
     const result = await container.taskUseCases.completeTask({
       id: params.id,
-      userId: auth.userId,
+      userId: user.id,
     });
 
     return context.json(taskMutationPresenter.toHttp(result), 200);
@@ -101,11 +101,11 @@ export const registerTaskRoutes = ({
 
   app.openapi(reopenTaskRoute, async (context) => {
     const params = context.req.valid("param");
-    const auth = context.get("auth");
+    const user = context.get("user");
 
     const result = await container.taskUseCases.reopenTask({
       id: params.id,
-      userId: auth.userId,
+      userId: user.id,
     });
 
     return context.json(taskMutationPresenter.toHttp(result), 200);
@@ -113,11 +113,11 @@ export const registerTaskRoutes = ({
 
   app.openapi(deleteTaskRoute, async (context) => {
     const params = context.req.valid("param");
-    const auth = context.get("auth");
+    const user = context.get("user");
 
     await container.taskUseCases.deleteTask({
       id: params.id,
-      userId: auth.userId,
+      userId: user.id,
     });
 
     return context.body(null, 204);

@@ -8,15 +8,18 @@ import type {
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
 import type { TaskResponse } from "@todo/task/infra/http/hono/responses/task-response.schema";
+import { makeAuthHeaders } from "@/app/http/hono/http-auth-test-helpers";
 
 describe("DELETE /tasks/{id}", () => {
   test("deletes a task", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
+    const authHeaders = await makeAuthHeaders(app);
 
     const createResponse = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -28,11 +31,14 @@ describe("DELETE /tasks/{id}", () => {
 
     const response = await app.request(`/tasks/${createdTask.id}`, {
       method: "DELETE",
+      headers: authHeaders,
     });
 
     expect(response.status).toBe(204);
 
-    const getResponse = await app.request(`/tasks/${createdTask.id}`);
+    const getResponse = await app.request(`/tasks/${createdTask.id}`, {
+      headers: authHeaders,
+    });
 
     expect(getResponse.status).toBe(404);
 
@@ -46,11 +52,13 @@ describe("DELETE /tasks/{id}", () => {
   test("returns not found when task does not exist", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
+    const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request(
       "/tasks/0195f6f9-391f-7000-8000-000000000999",
       {
         method: "DELETE",
+        headers: authHeaders,
       },
     );
 
@@ -66,9 +74,11 @@ describe("DELETE /tasks/{id}", () => {
   test("returns validation error when id is invalid", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
+    const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks/invalid-id", {
       method: "DELETE",
+      headers: authHeaders,
     });
 
     expect(response.status).toBe(400);

@@ -8,15 +8,19 @@ import type {
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
 import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
+import { makeAuthHeaders } from "@/app/http/hono/http-auth-test-helpers";
 
 describe("GET /categories/{id}", () => {
   test("gets a category by id", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
+    const authHeaders = await makeAuthHeaders(app);
+
     const createResponse = await app.request("/categories", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -26,7 +30,9 @@ describe("GET /categories/{id}", () => {
 
     const createdCategory = await readJson<CategoryResponse>(createResponse);
 
-    const response = await app.request(`/categories/${createdCategory.id}`);
+    const response = await app.request(`/categories/${createdCategory.id}`, {
+      headers: authHeaders,
+    });
 
     expect(response.status).toBe(200);
 
@@ -39,8 +45,11 @@ describe("GET /categories/{id}", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
+    const authHeaders = await makeAuthHeaders(app);
+
     const response = await app.request(
       "/categories/0195f6f9-391f-7000-8000-000000000999",
+      { headers: authHeaders },
     );
 
     expect(response.status).toBe(404);
@@ -56,7 +65,11 @@ describe("GET /categories/{id}", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
-    const response = await app.request("/categories/invalid-id");
+    const authHeaders = await makeAuthHeaders(app);
+
+    const response = await app.request("/categories/invalid-id", {
+      headers: authHeaders,
+    });
 
     expect(response.status).toBe(400);
 

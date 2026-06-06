@@ -5,8 +5,7 @@ import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/http/hono/http-test-helpers";
 import type { TaskResponse } from "../../responses/task-response.schema";
 import type { ValidationErrorHttpResponse } from "@app/http/hono/http-test-types";
-
-const fakeAuthUserId = "0195f6f9-391f-7000-8000-000000000002";
+import { makeAuthHeaders } from "@/app/http/hono/http-auth-test-helpers";
 
 const makeTestApp = () =>
   makeHonoApp({
@@ -16,10 +15,12 @@ const makeTestApp = () =>
 describe("POST /tasks", () => {
   it("creates a task using the authenticated user id", async () => {
     const app = makeTestApp();
+    const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -46,10 +47,12 @@ describe("POST /tasks", () => {
 
   it("ignores userId from body and uses the authenticated user id", async () => {
     const app = makeTestApp();
+    const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -67,10 +70,12 @@ describe("POST /tasks", () => {
 
   it("returns validation error when title is empty", async () => {
     const app = makeTestApp();
+    const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -90,10 +95,12 @@ describe("POST /tasks", () => {
 
   it("returns validation error when categoryId is invalid", async () => {
     const app = makeTestApp();
+    const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -113,10 +120,12 @@ describe("POST /tasks", () => {
 
   it("returns validation error when description is too long", async () => {
     const app = makeTestApp();
+    const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -136,10 +145,12 @@ describe("POST /tasks", () => {
 
   it("returns validation error when required title is missing", async () => {
     const app = makeTestApp();
+    const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

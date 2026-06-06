@@ -8,15 +8,18 @@ import type {
   ValidationErrorHttpResponse,
 } from "@app/http/hono/http-test-types";
 import type { TaskResponse } from "../../responses/task-response.schema";
+import { makeAuthHeaders } from "@/app/http/hono/http-auth-test-helpers";
 
 describe("GET /tasks/{id}", () => {
   test("gets a task by id", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
+    const authHeaders = await makeAuthHeaders(app);
 
     const createResponse = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -27,7 +30,9 @@ describe("GET /tasks/{id}", () => {
 
     const createdTask = await readJson<TaskResponse>(createResponse);
 
-    const response = await app.request(`/tasks/${createdTask.id}`);
+    const response = await app.request(`/tasks/${createdTask.id}`, {
+      headers: authHeaders,
+    });
 
     expect(response.status).toBe(200);
 
@@ -39,9 +44,11 @@ describe("GET /tasks/{id}", () => {
   test("returns not found when task does not exist", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
+    const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request(
       "/tasks/0195f6f9-391f-7000-8000-000000000999",
+      { headers: authHeaders },
     );
 
     expect(response.status).toBe(404);
@@ -56,8 +63,11 @@ describe("GET /tasks/{id}", () => {
   test("returns validation error when id is invalid", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
+    const authHeaders = await makeAuthHeaders(app);
 
-    const response = await app.request("/tasks/invalid-id");
+    const response = await app.request("/tasks/invalid-id", {
+      headers: authHeaders,
+    });
 
     expect(response.status).toBe(400);
 

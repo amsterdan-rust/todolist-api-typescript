@@ -22,11 +22,11 @@ export const registerCategoryRoutes = ({
   container,
 }: RegisterCategoryRoutesDeps) => {
   app.openapi(createCategoryRoute, async (context) => {
-    const auth = context.get("auth");
+    const user = context.get("user");
     const body = context.req.valid("json");
 
     const category = await container.categoryUseCases.createCategory({
-      userId: auth.userId,
+      userId: user.id,
       name: body.name,
     });
 
@@ -34,11 +34,11 @@ export const registerCategoryRoutes = ({
   });
 
   app.openapi(listCategoriesRoute, async (context) => {
-    const auth = context.get("auth");
+    const user = context.get("user");
     const query = context.req.valid("query");
 
     const categories = await container.categoryUseCases.listCategories({
-      userId: auth.userId,
+      userId: user.id,
       ...(query.name !== undefined && { name: query.name }),
     });
 
@@ -51,25 +51,25 @@ export const registerCategoryRoutes = ({
   });
 
   app.openapi(getCategoryRoute, async (context) => {
-    const auth = context.get("auth");
+    const user = context.get("user");
     const params = context.req.valid("param");
 
     const category = await container.categoryUseCases.getCategory({
       id: params.id,
-      userId: auth.userId,
+      userId: user.id,
     });
 
     return context.json(categoryPresenter.toHttp(category), 200);
   });
 
   app.openapi(updateCategoryRoute, async (context) => {
-    const auth = context.get("auth");
+    const user = context.get("user");
     const params = context.req.valid("param");
     const body = context.req.valid("json");
 
     const result = await container.categoryUseCases.updateCategory({
       id: params.id,
-      userId: auth.userId,
+      userId: user.id,
       name: body.name,
     });
 
@@ -77,12 +77,12 @@ export const registerCategoryRoutes = ({
   });
 
   app.openapi(deleteCategoryRoute, async (context) => {
-    const auth = context.get("auth");
+    const user = context.get("user");
     const params = context.req.valid("param");
 
     await container.categoryUseCases.deleteCategory({
       id: params.id,
-      userId: auth.userId,
+      userId: user.id,
     });
 
     return context.body(null, 204);

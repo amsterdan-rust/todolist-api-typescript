@@ -4,6 +4,7 @@ import { makeContainer } from "@app/container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/http/hono/http-test-helpers";
 import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
+import { makeAuthHeaders } from "@/app/http/hono/http-auth-test-helpers";
 
 type ListCategoriesHttpResponse = {
   categories: CategoryResponse[];
@@ -14,9 +15,12 @@ describe("GET /categories", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
+    const authHeaders = await makeAuthHeaders(app);
+
     const firstCreateResponse = await app.request("/categories", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -27,6 +31,7 @@ describe("GET /categories", () => {
     const secondCreateResponse = await app.request("/categories", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -38,7 +43,7 @@ describe("GET /categories", () => {
     const secondCategory =
       await readJson<CategoryResponse>(secondCreateResponse);
 
-    const response = await app.request("/categories");
+    const response = await app.request("/categories", { headers: authHeaders });
 
     expect(response.status).toBe(200);
 
@@ -53,7 +58,9 @@ describe("GET /categories", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
-    const response = await app.request("/categories");
+    const authHeaders = await makeAuthHeaders(app);
+
+    const response = await app.request("/categories", { headers: authHeaders });
 
     expect(response.status).toBe(200);
 
@@ -68,9 +75,12 @@ describe("GET /categories", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
+    const authHeaders = await makeAuthHeaders(app);
+
     const mercadoResponse = await app.request("/categories", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -81,6 +91,7 @@ describe("GET /categories", () => {
     await app.request("/categories", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -90,7 +101,9 @@ describe("GET /categories", () => {
 
     const mercadoCategory = await readJson<CategoryResponse>(mercadoResponse);
 
-    const response = await app.request("/categories?name=merc");
+    const response = await app.request("/categories?name=merc", {
+      headers: authHeaders,
+    });
 
     expect(response.status).toBe(200);
 

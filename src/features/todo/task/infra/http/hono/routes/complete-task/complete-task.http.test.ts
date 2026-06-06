@@ -9,15 +9,19 @@ import type {
 } from "@app/http/hono/http-test-types";
 import type { TaskMutationResponse } from "@todo/task/infra/http/hono/responses/task-mutation-response.schema";
 import type { TaskResponse } from "@todo/task/infra/http/hono/responses/task-response.schema";
+import { makeAuthHeaders } from "@/app/http/hono/http-auth-test-helpers";
 
 describe("PATCH /tasks/{id}/complete", () => {
   test("completes a task", async () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
+    const authHeaders = await makeAuthHeaders(app);
+
     const createResponse = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -29,6 +33,7 @@ describe("PATCH /tasks/{id}/complete", () => {
 
     const response = await app.request(`/tasks/${createdTask.id}/complete`, {
       method: "PATCH",
+      headers: authHeaders,
     });
 
     expect(response.status).toBe(200);
@@ -43,10 +48,13 @@ describe("PATCH /tasks/{id}/complete", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
+    const authHeaders = await makeAuthHeaders(app);
+
     const response = await app.request(
       "/tasks/0195f6f9-391f-7000-8000-000000000999/complete",
       {
         method: "PATCH",
+        headers: authHeaders,
       },
     );
 
@@ -63,8 +71,11 @@ describe("PATCH /tasks/{id}/complete", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
+    const authHeaders = await makeAuthHeaders(app);
+
     const response = await app.request("/tasks/invalid-id/complete", {
       method: "PATCH",
+      headers: authHeaders,
     });
 
     expect(response.status).toBe(400);
@@ -79,9 +90,12 @@ describe("PATCH /tasks/{id}/complete", () => {
     const container = makeContainer();
     const app = makeHonoApp({ container });
 
+    const authHeaders = await makeAuthHeaders(app);
+
     const createResponse = await app.request("/tasks", {
       method: "POST",
       headers: {
+        ...authHeaders,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -93,10 +107,12 @@ describe("PATCH /tasks/{id}/complete", () => {
 
     await app.request(`/tasks/${createdTask.id}/complete`, {
       method: "PATCH",
+      headers: authHeaders,
     });
 
     const response = await app.request(`/tasks/${createdTask.id}/complete`, {
       method: "PATCH",
+      headers: authHeaders,
     });
 
     expect(response.status).toBe(409);
