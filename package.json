@@ -3,20 +3,28 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --hot --port 8000 src/app/app.ts",
-    "test": "bun test",
-    "test:coverage": "bun test --coverage"
+    "db:generate": "bunx drizzle-kit generate",
+    "db:migrate:dev": "bun scripts/migrate.ts",
+    "db:migrate:test": "NODE_ENV=test bun scripts/migrate.ts",
+    "db:test:prepare": "rm -f app.test.sqlite app.test.sqlite-shm app.test.sqlite-wal && bun run db:migrate:test",
+    "test": "bun run db:test:prepare && NODE_ENV=test bun test --coverage",
+    "test:coverage": "bun run db:test:prepare && NODE_ENV=test bun test --coverage"
   },
   "private": true,
   "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.6.14",
     "@hono/zod-openapi": "^1.4.0",
     "@scalar/hono-api-reference": "^0.10.20",
     "better-auth": "1.6.11",
+    "drizzle-orm": "^0.45.2",
     "hono": "^4.12.23",
     "kysely": "0.28.17",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/bun": "^1.3.14",
+    "better-sqlite3": "^12.10.0",
+    "drizzle-kit": "^0.31.10",
     "typescript": "^6.0.3"
   }
 }

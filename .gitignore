@@ -2,6 +2,14 @@ auth.sqlite
 auth.sqlite-shm
 auth.sqlite-wal
 
+app.sqlite
+app.sqlite-shm
+app.sqlite-wal
+
+app.test.sqlite
+app.test.sqlite-shm
+app.test.sqlite-wal
+
 # dependencies (bun install)
 node_modules
 
