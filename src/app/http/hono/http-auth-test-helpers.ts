@@ -2,7 +2,21 @@ type TestApp = {
   request: (path: string, init?: RequestInit) => Response | Promise<Response>;
 };
 
-export const signUpAndGetAuthCookie = async (app: TestApp) => {
+type BetterAuthUserResponse = {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    image: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+};
+
+export const signUpTestUser = async (app: TestApp) => {
+  const email = `test-${crypto.randomUUID()}@example.com`;
+
   const response = await app.request("/auth/sign-up/email", {
     method: "POST",
     headers: {
@@ -10,7 +24,7 @@ export const signUpAndGetAuthCookie = async (app: TestApp) => {
     },
     body: JSON.stringify({
       name: "Test User",
-      email: `test-${crypto.randomUUID()}@example.com`,
+      email,
       password: "password123",
     }),
   });
@@ -18,6 +32,20 @@ export const signUpAndGetAuthCookie = async (app: TestApp) => {
   const cookie = response.headers.get("set-cookie");
 
   if (!cookie) throw new Error("Auth cookie was not returned.");
+
+  const body = (await response.json()) as BetterAuthUserResponse;
+
+  return {
+    cookie,
+    headers: {
+      cookie,
+    },
+    user: body.user,
+  };
+};
+
+export const signUpAndGetAuthCookie = async (app: TestApp) => {
+  const { cookie } = await signUpTestUser(app);
 
   return cookie;
 };

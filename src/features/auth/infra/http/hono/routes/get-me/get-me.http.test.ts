@@ -1,0 +1,56 @@
+import { describe, expect, test } from "bun:test";
+
+import { makeContainer } from "@app/container";
+import { makeHonoApp } from "@app/http/hono/hono-app";
+import { signUpTestUser } from "@app/http/hono/http-auth-test-helpers";
+import { readJson } from "@app/http/hono/http-test-helpers";
+
+import type { MeResponse } from "../../responses/me-response.schema";
+
+type UnauthorizedResponse = {
+  message: string;
+};
+
+describe("GET /me", () => {
+  test("returns unauthorized when request has no session", async () => {
+    const app = makeHonoApp({
+      container: makeContainer(),
+    });
+
+    const response = await app.request("/me");
+
+    expect(response.status).toBe(401);
+
+    const body = await readJson<UnauthorizedResponse>(response);
+
+    expect(body).toEqual({
+      message: "Unauthorized",
+    });
+  });
+
+  test("returns the current authenticated user", async () => {
+    const app = makeHonoApp({
+      container: makeContainer(),
+    });
+
+    const { headers, user } = await signUpTestUser(app);
+
+    const response = await app.request("/me", {
+      headers,
+    });
+
+    expect(response.status).toBe(200);
+
+    const body = await readJson<MeResponse>(response);
+
+    expect(body).toEqual({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        image: user.image,
+      },
+    });
+  });
+});
