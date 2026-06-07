@@ -8,6 +8,13 @@
       "when": 1780820450913,
       "tag": "0000_daily_metal_master",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1780847751530,
+      "tag": "0001_purple_butterfly",
+      "breakpoints": true
     }
   ]
 }
