@@ -1,6 +1,7 @@
 import { makeCryptoIdGenerator } from "@shared/id-generator";
 import { makeSystemClock } from "@shared/clock";
 
+import type { TaskRepository } from "@todo/task/app/repositories/task-repository";
 import { makeInMemoryTaskRepository } from "@todo/task/infra/repositories/in-memory-task-repository";
 import { makeCreateTask } from "@todo/task/app/use-cases/create-task";
 import { makeCompleteTask } from "@todo/task/app/use-cases/complete-task";
@@ -10,6 +11,7 @@ import { makeDeleteTask } from "@todo/task/app/use-cases/delete-task";
 import { makeListTasks } from "@todo/task/app/use-cases/list-tasks";
 import { makeGetTask } from "@todo/task/app/use-cases/get-task";
 
+import type { CategoryRepository } from "@todo/category/app/repositories/category-repository";
 import { makeInMemoryCategoryRepository } from "@todo/category/infra/repositories/in-memory-category-repository";
 import { makeCreateCategory } from "@todo/category/app/use-cases/create-category";
 import { makeUpdateCategory } from "@todo/category/app/use-cases/update-category";
@@ -17,12 +19,17 @@ import { makeDeleteCategory } from "@todo/category/app/use-cases/delete-category
 import { makeListCategories } from "@todo/category/app/use-cases/list-categories";
 import { makeGetCategory } from "@todo/category/app/use-cases/get-category";
 
-export const makeContainer = () => {
+type MakeContainerDeps = {
+  taskRepository?: TaskRepository;
+  categoryRepository?: CategoryRepository;
+};
+
+export const makeContainer = ({
+  taskRepository = makeInMemoryTaskRepository(),
+  categoryRepository = makeInMemoryCategoryRepository(),
+}: MakeContainerDeps = {}) => {
   const clock = makeSystemClock();
   const idGenerator = makeCryptoIdGenerator();
-
-  const taskRepository = makeInMemoryTaskRepository();
-  const categoryRepository = makeInMemoryCategoryRepository();
 
   return {
     repositories: {
