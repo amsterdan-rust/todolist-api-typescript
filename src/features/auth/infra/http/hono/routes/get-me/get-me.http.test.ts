@@ -53,4 +53,31 @@ describe("GET /me", () => {
       },
     });
   });
+
+  test("returns unauthorized after sign out", async () => {
+    const app = makeHonoApp({
+      container: makeContainer(),
+    });
+
+    const { headers } = await signUpTestUser(app);
+
+    const meBeforeSignOutResponse = await app.request("/me", {
+      headers,
+    });
+
+    expect(meBeforeSignOutResponse.status).toBe(200);
+
+    const signOutResponse = await app.request("/auth/sign-out", {
+      method: "POST",
+      headers,
+    });
+
+    expect(signOutResponse.status).toBe(200);
+
+    const meAfterSignOutResponse = await app.request("/me", {
+      headers,
+    });
+
+    expect(meAfterSignOutResponse.status).toBe(401);
+  });
 });
