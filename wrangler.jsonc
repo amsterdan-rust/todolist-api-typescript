@@ -8,6 +8,7 @@
       "binding": "DB",
       "database_name": "todolist-api-db",
       "database_id": "ec7af0a6-5a7b-477a-b4b2-8c2efdff363e",
+      "migrations_dir": "drizzle",
     },
   ],
 }

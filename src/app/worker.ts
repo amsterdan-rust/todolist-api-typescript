@@ -33,4 +33,19 @@ app.get("/debug/drizzle", async (c) => {
   return c.json(result);
 });
 
+app.get("/debug/tables", async (c) => {
+  const db = makeD1Database(c.env.DB);
+
+  const tables = await db.all<{ name: string }>(sql`
+    SELECT name
+    FROM sqlite_master
+    WHERE type = 'table'
+    ORDER BY name
+  `);
+
+  return c.json({
+    tables,
+  });
+});
+
 export default app;
