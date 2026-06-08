@@ -1,5 +1,9 @@
-import type { D1Database } from "@cloudflare/workers-types";
+// src/app/worker.ts
 import { Hono } from "hono";
+import { sql } from "drizzle-orm";
+
+import { makeD1Database } from "./database/d1";
+import type { D1Database } from "@cloudflare/workers-types";
 
 type Env = {
   Bindings: {
@@ -17,6 +21,14 @@ app.get("/health", (c) =>
 
 app.get("/debug/db", async (c) => {
   const result = await c.env.DB.prepare("SELECT 1 as ok").first();
+
+  return c.json(result);
+});
+
+app.get("/debug/drizzle", async (c) => {
+  const db = makeD1Database(c.env.DB);
+
+  const result = await db.get<{ ok: number }>(sql`SELECT 1 as ok`);
 
   return c.json(result);
 });
