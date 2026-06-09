@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 
 import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
-import { makeHonoApp } from "@app/http/hono/hono-app";
+import { makeHonoApp } from "@app/http/hono/make-hono-app";
 
 type BetterAuthUserResponse = {
   user: {

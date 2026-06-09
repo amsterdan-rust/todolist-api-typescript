@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
-import { makeHonoApp } from "@app/http/hono/hono-app";
+import { makeHonoApp } from "@app/http/hono/make-hono-app";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
 import { makeAuthHeaders } from "@/app/test-support/http/http-auth-test-helpers";

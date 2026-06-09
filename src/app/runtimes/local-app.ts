@@ -1,5 +1,5 @@
 import { makeLocalContainer } from "../composition/make-local-container";
-import { makeHonoApp } from "../http/hono/hono-app";
+import { makeHonoApp } from "@app/http/hono/make-hono-app";
 
 const container = makeLocalContainer();
 
