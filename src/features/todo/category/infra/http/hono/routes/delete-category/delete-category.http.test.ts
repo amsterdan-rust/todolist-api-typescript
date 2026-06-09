@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { makeContainer } from "@app/container";
+import { makeInMemoryContainer } from "/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type {
@@ -12,7 +12,7 @@ import { makeAuthHeaders } from "@/app/test-support/http/http-auth-test-helpers"
 
 describe("DELETE /categories/{id}", () => {
   test("deletes a category", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);
@@ -51,7 +51,7 @@ describe("DELETE /categories/{id}", () => {
   });
 
   test("returns not found when category does not exist", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);
@@ -74,7 +74,7 @@ describe("DELETE /categories/{id}", () => {
   });
 
   test("returns validation error when id is invalid", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);

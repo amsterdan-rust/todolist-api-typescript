@@ -1,7 +1,7 @@
-import { makeProductionContainer } from "./production-container";
+import { makeLocalContainer } from "./composition/make-local-container";
 import { makeHonoApp } from "./http/hono/hono-app";
 
-const container = makeProductionContainer();
+const container = makeLocalContainer();
 
 const app = makeHonoApp({
   container,

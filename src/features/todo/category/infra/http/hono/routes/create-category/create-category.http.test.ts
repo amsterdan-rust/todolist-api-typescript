@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { makeContainer } from "@app/container";
+import { makeInMemoryContainer } from "/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type { ValidationErrorHttpResponse } from "@app/test-support/http/http-test-types";
@@ -9,7 +9,7 @@ import { makeAuthHeaders } from "@app/test-support/http/http-auth-test-helpers";
 
 describe("POST /categories", () => {
   test("creates a category using the authenticated user id", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);
@@ -38,7 +38,7 @@ describe("POST /categories", () => {
   });
 
   test("ignores userId from body and uses the authenticated user id", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);
@@ -63,7 +63,7 @@ describe("POST /categories", () => {
   });
 
   test("returns validation error when name is empty", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);
@@ -88,7 +88,7 @@ describe("POST /categories", () => {
   });
 
   test("returns validation error when required name is missing", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);

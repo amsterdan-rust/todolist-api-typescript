@@ -1,10 +1,10 @@
 import { db } from "@app/database/local/db";
-import { makeContainer } from "@app/container";
+import { makeAppContainer } from "./make-app-container";
 import { makeDrizzleCategoryRepository } from "@todo/category/infra/repositories/drizzle-category-repository/drizzle-category.repository";
 import { makeDrizzleTaskRepository } from "@todo/task/infra/repositories/drizzle-task-repository/drizzle-task.repository";
 
-export const makeProductionContainer = () =>
-  makeContainer({
+export const makeLocalContainer = () =>
+  makeAppContainer({
     taskRepository: makeDrizzleTaskRepository({
       db,
     }),

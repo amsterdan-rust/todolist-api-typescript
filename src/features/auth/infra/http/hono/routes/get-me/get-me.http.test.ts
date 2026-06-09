@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { makeContainer } from "@app/container";
+import { makeInMemoryContainer } from "/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { signUpTestUser } from "@app/test-support/http/http-auth-test-helpers";
 import { readJson } from "@app/test-support/http/http-test-helpers";
@@ -14,7 +14,7 @@ type UnauthorizedResponse = {
 describe("GET /me", () => {
   test("returns unauthorized when request has no session", async () => {
     const app = makeHonoApp({
-      container: makeContainer(),
+      container: makeInMemoryContainer(),
     });
 
     const response = await app.request("/me");
@@ -30,7 +30,7 @@ describe("GET /me", () => {
 
   test("returns the current authenticated user", async () => {
     const app = makeHonoApp({
-      container: makeContainer(),
+      container: makeInMemoryContainer(),
     });
 
     const { headers, user } = await signUpTestUser(app);
@@ -56,7 +56,7 @@ describe("GET /me", () => {
 
   test("returns unauthorized after sign out", async () => {
     const app = makeHonoApp({
-      container: makeContainer(),
+      container: makeInMemoryContainer(),
     });
 
     const { headers } = await signUpTestUser(app);

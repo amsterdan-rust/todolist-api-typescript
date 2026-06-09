@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { makeContainer } from "@app/container";
+import { makeInMemoryContainer } from "/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
@@ -12,7 +12,7 @@ type ListCategoriesHttpResponse = {
 
 describe("GET /categories", () => {
   test("lists authenticated user categories", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);
@@ -55,7 +55,7 @@ describe("GET /categories", () => {
   });
 
   test("returns an empty list when authenticated user has no categories", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);
@@ -72,7 +72,7 @@ describe("GET /categories", () => {
   });
 
   test("filters categories by name", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
 
     const authHeaders = await makeAuthHeaders(app);

@@ -1,7 +1,7 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { Scalar } from "@scalar/hono-api-reference";
 
-import type { AppContainer } from "@app/container";
+import type { AppContainer } from "@app/composition/make-app-container";
 import {
   betterAuthMiddleware,
   type AuthVariables,

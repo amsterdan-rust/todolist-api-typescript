@@ -24,7 +24,7 @@ type MakeContainerDeps = {
   categoryRepository?: CategoryRepository;
 };
 
-export const makeContainer = ({
+export const makeAppContainer = ({
   taskRepository = makeInMemoryTaskRepository(),
   categoryRepository = makeInMemoryCategoryRepository(),
 }: MakeContainerDeps = {}) => {
@@ -101,4 +101,4 @@ export const makeContainer = ({
   };
 };
 
-export type AppContainer = ReturnType<typeof makeContainer>;
+export type AppContainer = ReturnType<typeof makeAppContainer>;

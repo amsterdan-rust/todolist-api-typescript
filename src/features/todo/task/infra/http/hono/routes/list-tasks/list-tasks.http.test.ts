@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { makeContainer } from "@app/container";
+import { makeInMemoryContainer } from "/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type { TaskResponse } from "@todo/task/infra/http/hono/responses/task-response.schema";
@@ -12,7 +12,7 @@ type ListTasksHttpResponse = {
 
 describe("GET /tasks", () => {
   test("lists authenticated user tasks", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
     const authHeaders = await makeAuthHeaders(app);
 
@@ -53,7 +53,7 @@ describe("GET /tasks", () => {
   });
 
   test("returns an empty list when authenticated user has no tasks", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
     const authHeaders = await makeAuthHeaders(app);
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { makeContainer } from "@app/container";
+import { makeInMemoryContainer } from "/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type {
@@ -13,7 +13,7 @@ import { makeAuthHeaders } from "@/app/test-support/http/http-auth-test-helpers"
 
 describe("PATCH /tasks/{id}/reopen", () => {
   test("reopens a task", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
     const authHeaders = await makeAuthHeaders(app);
 
@@ -49,7 +49,7 @@ describe("PATCH /tasks/{id}/reopen", () => {
   });
 
   test("returns not found when task does not exist", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
     const authHeaders = await makeAuthHeaders(app);
 
@@ -71,7 +71,7 @@ describe("PATCH /tasks/{id}/reopen", () => {
   });
 
   test("returns validation error when id is invalid", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
     const authHeaders = await makeAuthHeaders(app);
 
@@ -89,7 +89,7 @@ describe("PATCH /tasks/{id}/reopen", () => {
   });
 
   test("returns conflict when task is already pending", async () => {
-    const container = makeContainer();
+    const container = makeInMemoryContainer();
     const app = makeHonoApp({ container });
     const authHeaders = await makeAuthHeaders(app);
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 
-import { makeContainer } from "@app/container";
+import { makeInMemoryContainer } from "/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type { TaskResponse } from "../../responses/task-response.schema";
@@ -9,7 +9,7 @@ import { makeAuthHeaders } from "@/app/test-support/http/http-auth-test-helpers"
 
 const makeTestApp = () =>
   makeHonoApp({
-    container: makeContainer(),
+    container: makeInMemoryContainer(),
   });
 
 describe("POST /tasks", () => {

@@ -1,4 +1,4 @@
-import type { AppContainer } from "@app/container";
+import type { AppContainer } from "@app/composition/make-app-container";
 
 import { categoryPresenter } from "../presenters/category.presenter";
 import { createCategoryRoute } from "./create-category/create-category.route";

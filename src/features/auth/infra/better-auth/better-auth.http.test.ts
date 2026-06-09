@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 
-import { makeContainer } from "@app/container";
+import { makeInMemoryContainer } from "/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 
 type BetterAuthUserResponse = {
@@ -31,7 +31,7 @@ type BetterAuthSessionResponse = {
 
 describe("Better Auth HTTP routes", () => {
   it("handles auth routes", async () => {
-    const app = makeHonoApp({ container: makeContainer() });
+    const app = makeHonoApp({ container: makeInMemoryContainer() });
 
     const response = await app.request("/auth/get-session");
 
@@ -39,7 +39,7 @@ describe("Better Auth HTTP routes", () => {
   });
 
   it("signs up a user with email and password", async () => {
-    const app = makeHonoApp({ container: makeContainer() });
+    const app = makeHonoApp({ container: makeInMemoryContainer() });
     const email = `test-${crypto.randomUUID()}@example.com`;
 
     const response = await app.request("/auth/sign-up/email", {
@@ -62,7 +62,7 @@ describe("Better Auth HTTP routes", () => {
   });
 
   it("does not sign up a user with an already used email", async () => {
-    const app = makeHonoApp({ container: makeContainer() });
+    const app = makeHonoApp({ container: makeInMemoryContainer() });
     const email = `test-${crypto.randomUUID()}@example.com`;
 
     await app.request("/auth/sign-up/email", {
@@ -93,7 +93,7 @@ describe("Better Auth HTTP routes", () => {
   });
 
   it("signs in a user with email and password", async () => {
-    const app = makeHonoApp({ container: makeContainer() });
+    const app = makeHonoApp({ container: makeInMemoryContainer() });
     const email = `test-${crypto.randomUUID()}@example.com`;
     const password = "password123";
 
@@ -127,7 +127,7 @@ describe("Better Auth HTTP routes", () => {
   });
 
   it("gets the current session using the auth cookie", async () => {
-    const app = makeHonoApp({ container: makeContainer() });
+    const app = makeHonoApp({ container: makeInMemoryContainer() });
     const email = `test-${crypto.randomUUID()}@example.com`;
     const password = "password123";
 
