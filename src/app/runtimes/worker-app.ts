@@ -2,7 +2,7 @@
 import { Hono } from "hono";
 import { sql } from "drizzle-orm";
 
-import { makeD1Database } from "./database/d1";
+import { makeD1Database } from "../database/worker/d1";
 import type { D1Database } from "@cloudflare/workers-types";
 
 type Env = {

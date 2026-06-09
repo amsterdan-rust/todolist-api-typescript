@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "todolist-api",
-  "main": "src/app/worker.ts",
+  "main": "src/app/runtimes/worker-app.ts",
   "compatibility_date": "2026-06-07",
   "d1_databases": [
     {

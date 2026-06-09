@@ -2,12 +2,12 @@
   "name": "todolist-api",
   "type": "module",
   "scripts": {
-    "dev": "bun run --hot --port 8000 src/app/app.ts",
+    "dev": "bun run --hot --port 8000 src/app/runtimes/local-app.ts",
     "db:generate": "npx drizzle-kit generate",
     "db:push:dev": "npx drizzle-kit push",
     "db:push:test": "NODE_ENV=test npx drizzle-kit push",
     "db:test:prepare": "rm -f app.test.sqlite app.test.sqlite-shm app.test.sqlite-wal && bun run db:push:test",
-    "test": "bun run db:test:prepare && NODE_ENV=test bun test",
+    "test": "bun run db:test:prepare && NODE_ENV=test bun test --coverage",
     "test:coverage": "bun run db:test:prepare && NODE_ENV=test bun test --coverage"
   },
   "private": true,
