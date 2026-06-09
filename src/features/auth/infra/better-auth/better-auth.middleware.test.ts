@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { Hono } from "hono";
 
-import { makeInMemoryContainer } from "/composition/make-in-memory-container";
+import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 
 import { betterAuthMiddleware } from "./better-auth.middleware";

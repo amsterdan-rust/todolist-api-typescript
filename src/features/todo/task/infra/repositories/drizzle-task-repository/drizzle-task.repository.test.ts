@@ -1,7 +1,7 @@
 // src/features/todo/task/infra/repositories/drizzle-task-repository/drizzle-task.repository.test.ts
 import { describe, expect, test } from "bun:test";
 
-import { makeInMemoryContainer } from "/composition/make-in-memory-container";
+import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
 import { db } from "@app/database/local/db";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { signUpTestUser } from "@app/test-support/http/http-auth-test-helpers";

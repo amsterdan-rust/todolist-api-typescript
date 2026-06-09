@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 
-import { makeInMemoryContainer } from "/composition/make-in-memory-container";
+import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type { TaskResponse } from "../../responses/task-response.schema";
