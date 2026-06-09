@@ -1,19 +1,21 @@
 import { describe, expect, test } from "bun:test";
 
 import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
-import { makeHonoApp } from "@app/http/hono/make-hono-app";
+
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/test-support/http/http-test-types";
 import type { TaskResponse } from "../../responses/task-response.schema";
-import { makeAuthHeaders } from "@/app/test-support/http/http-auth-test-helpers";
+import {
+  makeAuthHeaders,
+  makeLocalHttpTestApp,
+} from "@/app/test-support/http/http-auth-test-helpers";
 
 describe("GET /tasks/{id}", () => {
   test("gets a task by id", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const createResponse = await app.request("/tasks", {
@@ -42,8 +44,7 @@ describe("GET /tasks/{id}", () => {
   });
 
   test("returns not found when task does not exist", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request(
@@ -61,8 +62,7 @@ describe("GET /tasks/{id}", () => {
   });
 
   test("returns validation error when id is invalid", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks/invalid-id", {

@@ -3,7 +3,7 @@ import type { AppContainer } from "@app/composition/make-app-container";
 import { categoryPresenter } from "../presenters/category.presenter";
 import { createCategoryRoute } from "./create-category/create-category.route";
 import type { OpenAPIHono } from "@hono/zod-openapi";
-import type { AuthVariables } from "/auth/infra/better-auth/better-auth.middleware";
+import type { AuthVariables } from "@auth/infra/better-auth/better-auth.middleware";
 import { listCategoriesRoute } from "./list-categories/list-categories.route";
 import { getCategoryRoute } from "./get-category/get-category.route";
 import { updateCategoryRoute } from "./update-category/update-category.route";

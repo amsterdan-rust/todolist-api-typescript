@@ -1,17 +1,17 @@
 import { describe, expect, test } from "bun:test";
 
-import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
-import { makeHonoApp } from "@app/http/hono/make-hono-app";
+import {
+  makeAuthHeaders,
+  makeLocalHttpTestApp,
+} from "@app/test-support/http/http-auth-test-helpers";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type { ValidationErrorHttpResponse } from "@app/test-support/http/http-test-types";
+import { auth } from "@auth/infra/better-auth/auth";
 import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
-import { makeAuthHeaders } from "@app/test-support/http/http-auth-test-helpers";
 
 describe("POST /categories", () => {
   test("creates a category using the authenticated user id", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/categories", {
@@ -38,9 +38,7 @@ describe("POST /categories", () => {
   });
 
   test("ignores userId from body and uses the authenticated user id", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/categories", {
@@ -63,9 +61,7 @@ describe("POST /categories", () => {
   });
 
   test("returns validation error when name is empty", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/categories", {
@@ -88,9 +84,7 @@ describe("POST /categories", () => {
   });
 
   test("returns validation error when required name is missing", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/categories", {

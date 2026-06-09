@@ -1,20 +1,20 @@
 import { describe, expect, test } from "bun:test";
 
 import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
-import { makeHonoApp } from "@app/http/hono/make-hono-app";
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
 } from "@app/test-support/http/http-test-types";
 import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
-import { makeAuthHeaders } from "@/app/test-support/http/http-auth-test-helpers";
+import {
+  makeAuthHeaders,
+  makeLocalHttpTestApp,
+} from "@/app/test-support/http/http-auth-test-helpers";
 
 describe("GET /categories/{id}", () => {
   test("gets a category by id", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const createResponse = await app.request("/categories", {
@@ -42,9 +42,7 @@ describe("GET /categories/{id}", () => {
   });
 
   test("returns not found when category does not exist", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request(
@@ -62,9 +60,7 @@ describe("GET /categories/{id}", () => {
   });
 
   test("returns validation error when id is invalid", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/categories/invalid-id", {

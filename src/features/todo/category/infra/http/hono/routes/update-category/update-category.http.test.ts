@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
-import { makeHonoApp } from "@app/http/hono/make-hono-app";
+
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type {
   ErrorHttpResponse,
@@ -9,13 +9,14 @@ import type {
 } from "@app/test-support/http/http-test-types";
 import type { CategoryMutationResponse } from "@todo/category/infra/http/hono/responses/category-mutation-response.schema";
 import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
-import { makeAuthHeaders } from "@/app/test-support/http/http-auth-test-helpers";
+import {
+  makeAuthHeaders,
+  makeLocalHttpTestApp,
+} from "@/app/test-support/http/http-auth-test-helpers";
 
 describe("PATCH /categories/{id}", () => {
   test("updates a category", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const createResponse = await app.request("/categories", {
@@ -51,9 +52,7 @@ describe("PATCH /categories/{id}", () => {
   });
 
   test("returns not found when category does not exist", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request(
@@ -80,9 +79,7 @@ describe("PATCH /categories/{id}", () => {
   });
 
   test("returns validation error when id is invalid", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/categories/invalid-id", {
@@ -105,9 +102,7 @@ describe("PATCH /categories/{id}", () => {
   });
 
   test("returns validation error when name is empty", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const createResponse = await app.request("/categories", {
@@ -143,9 +138,7 @@ describe("PATCH /categories/{id}", () => {
   });
 
   test("returns validation error when required name is missing", async () => {
-    const container = makeInMemoryContainer();
-    const app = makeHonoApp({ container });
-
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const createResponse = await app.request("/categories", {

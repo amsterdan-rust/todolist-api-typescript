@@ -3,6 +3,7 @@ import { Hono } from "hono";
 
 import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
 import { makeHonoApp } from "@app/http/hono/make-hono-app";
+import { auth } from "@auth/infra/better-auth/auth";
 
 import { betterAuthMiddleware } from "./better-auth.middleware";
 
@@ -25,7 +26,10 @@ describe("betterAuthMiddleware", () => {
   });
 
   it("sets authenticated user when request has a valid session", async () => {
-    const authApp = makeHonoApp({ container: makeInMemoryContainer() });
+    const authApp = makeHonoApp({
+      auth,
+      container: makeInMemoryContainer(),
+    });
     const email = `test-${crypto.randomUUID()}@example.com`;
 
     const signUpResponse = await authApp.request("/auth/sign-up/email", {

@@ -28,3 +28,5 @@ export const makeAuth = ({ db, baseURL }: MakeAuthDeps) =>
       },
     },
   });
+
+export type Auth = ReturnType<typeof makeAuth>;

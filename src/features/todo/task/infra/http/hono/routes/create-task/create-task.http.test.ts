@@ -1,20 +1,18 @@
 import { describe, expect, it } from "bun:test";
 
 import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
-import { makeHonoApp } from "@app/http/hono/make-hono-app";
+
 import { readJson } from "@app/test-support/http/http-test-helpers";
 import type { TaskResponse } from "../../responses/task-response.schema";
 import type { ValidationErrorHttpResponse } from "@app/test-support/http/http-test-types";
-import { makeAuthHeaders } from "@/app/test-support/http/http-auth-test-helpers";
-
-const makeTestApp = () =>
-  makeHonoApp({
-    container: makeInMemoryContainer(),
-  });
+import {
+  makeAuthHeaders,
+  makeLocalHttpTestApp,
+} from "@/app/test-support/http/http-auth-test-helpers";
 
 describe("POST /tasks", () => {
   it("creates a task using the authenticated user id", async () => {
-    const app = makeTestApp();
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
@@ -46,7 +44,7 @@ describe("POST /tasks", () => {
   });
 
   it("ignores userId from body and uses the authenticated user id", async () => {
-    const app = makeTestApp();
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
@@ -69,7 +67,7 @@ describe("POST /tasks", () => {
   });
 
   it("returns validation error when title is empty", async () => {
-    const app = makeTestApp();
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
@@ -94,7 +92,7 @@ describe("POST /tasks", () => {
   });
 
   it("returns validation error when categoryId is invalid", async () => {
-    const app = makeTestApp();
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
@@ -119,7 +117,7 @@ describe("POST /tasks", () => {
   });
 
   it("returns validation error when description is too long", async () => {
-    const app = makeTestApp();
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {
@@ -144,7 +142,7 @@ describe("POST /tasks", () => {
   });
 
   it("returns validation error when required title is missing", async () => {
-    const app = makeTestApp();
+    const app = makeLocalHttpTestApp();
     const authHeaders = await makeAuthHeaders(app);
 
     const response = await app.request("/tasks", {

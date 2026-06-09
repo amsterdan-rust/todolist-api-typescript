@@ -6,7 +6,7 @@ import {
   betterAuthMiddleware,
   type AuthVariables,
 } from "@auth/infra/better-auth/better-auth.middleware";
-import { betterAuthHandler } from "@features/auth/infra/better-auth/better-auth.handler";
+import type { Auth } from "@auth/infra/better-auth/auth.factory";
 import { registerTaskRoutes } from "@features/todo/task/infra/http/hono/routes/tasks.routes";
 import { registerCategoryRoutes } from "@todo/category/infra/http/hono/routes/categories.routes";
 import { makeHonoErrorHandler } from "./hono-error-handler";
@@ -14,6 +14,7 @@ import { registerAuthRoutes } from "@auth/infra/http/hono/routes/auth.routes";
 
 type MakeHonoAppDeps = {
   container: AppContainer;
+  auth: Auth;
 };
 
 const healthRoute = createRoute({
@@ -37,7 +38,7 @@ const healthRoute = createRoute({
   },
 });
 
-export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
+export const makeHonoApp = ({ container, auth }: MakeHonoAppDeps) => {
   const app = new OpenAPIHono<{
     Variables: AuthVariables;
   }>({
@@ -78,7 +79,7 @@ export const makeHonoApp = ({ container }: MakeHonoAppDeps) => {
     }),
   );
 
-  app.on(["POST", "GET"], "/auth/*", (c) => betterAuthHandler(c.req.raw));
+  app.on(["POST", "GET"], "/auth/*", (c) => auth.handler(c.req.raw));
 
   registerAuthRoutes({
     app,

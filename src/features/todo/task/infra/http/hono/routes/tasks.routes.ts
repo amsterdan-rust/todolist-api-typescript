@@ -1,7 +1,7 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
 
 import type { AppContainer } from "@app/composition/make-app-container";
-import type { AuthVariables } from "/auth/infra/better-auth/better-auth.middleware";
+import type { AuthVariables } from "@auth/infra/better-auth/better-auth.middleware";
 import { createTaskRoute } from "./create-task/create-task.route";
 import { getTaskRoute } from "./get-task/get-task.route";
 import { listTasksRoute } from "./list-tasks/list-tasks.route";

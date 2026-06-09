@@ -1,3 +1,8 @@
+import { makeLocalContainer } from "@/app/composition/make-local-container";
+import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
+import { makeHonoApp } from "@app/http/hono/make-hono-app";
+import { auth } from "@auth/infra/better-auth/auth";
+
 type TestApp = {
   request: (path: string, init?: RequestInit) => Response | Promise<Response>;
 };
@@ -53,3 +58,15 @@ export const signUpAndGetAuthCookie = async (app: TestApp) => {
 export const makeAuthHeaders = async (app: TestApp) => ({
   cookie: await signUpAndGetAuthCookie(app),
 });
+
+export const makeInMemoryTestApp = () =>
+  makeHonoApp({
+    auth,
+    container: makeInMemoryContainer(),
+  });
+
+export const makeLocalHttpTestApp = () =>
+  makeHonoApp({
+    auth,
+    container: makeLocalContainer(),
+  });

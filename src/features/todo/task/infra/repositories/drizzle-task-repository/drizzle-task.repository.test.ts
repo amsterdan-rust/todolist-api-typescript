@@ -1,9 +1,9 @@
-// src/features/todo/task/infra/repositories/drizzle-task-repository/drizzle-task.repository.test.ts
 import { describe, expect, test } from "bun:test";
 
 import { makeInMemoryContainer } from "@app/composition/make-in-memory-container";
 import { db } from "@app/database/local/db";
 import { makeHonoApp } from "@app/http/hono/make-hono-app";
+import { auth } from "@auth/infra/better-auth/auth";
 import { signUpTestUser } from "@app/test-support/http/http-auth-test-helpers";
 import { makeCategory } from "@todo/category/domain/category";
 import { makeDrizzleCategoryRepository } from "@todo/category/infra/repositories/drizzle-category-repository/drizzle-category.repository";
@@ -13,6 +13,7 @@ import { makeDrizzleTaskRepository } from "./drizzle-task.repository";
 
 const makeAuthenticatedUser = async () => {
   const app = makeHonoApp({
+    auth,
     container: makeInMemoryContainer(),
   });
 
