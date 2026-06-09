@@ -1,7 +1,7 @@
 // src/features/todo/category/infra/repositories/drizzle-category-repository/drizzle-category.repository.ts
 import { and, eq, sql } from "drizzle-orm";
 
-import type { db } from "@/app/database/db";
+import type { db } from "@/app/database/local/db";
 import { categories } from "@/app/database/schemas/category.schema";
 import type {
   CategoryRepository,

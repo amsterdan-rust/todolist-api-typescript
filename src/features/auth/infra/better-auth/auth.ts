@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 
-import { db } from "@/app/database/db";
+import { db } from "@/app/database/local/db";
 import * as schema from "@/app/database/schema";
 import { makeCryptoIdGenerator } from "@/shared/id-generator";
 

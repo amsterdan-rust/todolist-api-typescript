@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, isNull, sql, type SQL } from "drizzle-orm";
 
-import type { db } from "@/app/database/db";
+import type { db } from "@/app/database/local/db";
 import { tasks } from "@/app/database/schemas/task.schema";
 import type {
   ListTaskRecordsInput,

@@ -2,7 +2,7 @@
 import { describe, expect, test } from "bun:test";
 
 import { makeContainer } from "@app/container";
-import { db } from "@app/database/db";
+import { db } from "@app/database/local/db";
 import { makeHonoApp } from "@app/http/hono/hono-app";
 import { signUpTestUser } from "@app/http/hono/http-auth-test-helpers";
 import { makeCategory } from "@todo/category/domain/category";
