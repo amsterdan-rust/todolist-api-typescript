@@ -4,14 +4,27 @@ import { sql } from "drizzle-orm";
 
 import { makeD1Database } from "../database/worker/d1";
 import type { D1Database } from "@cloudflare/workers-types";
+import { makeAuth } from "@/features/auth/infra/better-auth/auth.factory";
 
 type Env = {
   Bindings: {
     DB: D1Database;
+    BETTER_AUTH_URL: string;
   };
 };
 
 const app = new Hono<Env>();
+
+app.on(["POST", "GET"], "/auth/*", (c) => {
+  const db = makeD1Database(c.env.DB);
+
+  const auth = makeAuth({
+    db,
+    baseURL: c.env.BETTER_AUTH_URL,
+  });
+
+  return auth.handler(c.req.raw);
+});
 
 app.get("/health", (c) =>
   c.json({
