@@ -10,6 +10,8 @@ app.test.sqlite
 app.test.sqlite-shm
 app.test.sqlite-wal
 
+.wrangler/
+
 # dependencies (bun install)
 node_modules
 
