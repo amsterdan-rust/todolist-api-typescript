@@ -2,13 +2,13 @@ import { describe, expect, test } from "bun:test";
 
 import { makeContainer } from "@app/container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
-import { readJson } from "@app/http/hono/http-test-helpers";
+import { readJson } from "@app/test-support/http/http-test-helpers";
 import type {
   ErrorHttpResponse,
   ValidationErrorHttpResponse,
-} from "@app/http/hono/http-test-types";
+} from "@app/test-support/http/http-test-types";
 import type { CategoryResponse } from "@todo/category/infra/http/hono/responses/category-response.schema";
-import { makeAuthHeaders } from "@/app/http/hono/http-auth-test-helpers";
+import { makeAuthHeaders } from "@/app/test-support/http/http-auth-test-helpers";
 
 describe("GET /categories/{id}", () => {
   test("gets a category by id", async () => {

@@ -2,8 +2,8 @@ import { describe, expect, test } from "bun:test";
 
 import { makeContainer } from "@app/container";
 import { makeHonoApp } from "@app/http/hono/hono-app";
-import { signUpTestUser } from "@app/http/hono/http-auth-test-helpers";
-import { readJson } from "@app/http/hono/http-test-helpers";
+import { signUpTestUser } from "@app/test-support/http/http-auth-test-helpers";
+import { readJson } from "@app/test-support/http/http-test-helpers";
 
 import type { MeResponse } from "../../responses/me-response.schema";
 
