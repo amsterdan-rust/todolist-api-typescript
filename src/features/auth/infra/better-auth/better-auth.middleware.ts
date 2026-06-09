@@ -1,6 +1,6 @@
 import type { MiddlewareHandler } from "hono";
 
-import { auth } from "./auth";
+import type { Auth } from "./auth.factory";
 
 export type AuthVariables = {
   user: {
@@ -8,8 +8,14 @@ export type AuthVariables = {
   };
 };
 
-export const betterAuthMiddleware =
-  (): MiddlewareHandler<{
+type MakeBetterAuthMiddlewareDeps = {
+  auth: Auth;
+};
+
+export const makeBetterAuthMiddleware =
+  ({
+    auth,
+  }: MakeBetterAuthMiddlewareDeps): MiddlewareHandler<{
     Variables: AuthVariables;
   }> =>
   async (c, next) => {

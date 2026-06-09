@@ -1,6 +1,6 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
 
-import { auth } from "@features/auth/infra/better-auth/auth";
+import type { Auth } from "@features/auth/infra/better-auth/auth.factory";
 import type { AuthVariables } from "@features/auth/infra/better-auth/better-auth.middleware";
 
 import type { MeResponse } from "../responses/me-response.schema";
@@ -10,9 +10,10 @@ type RegisterAuthRoutesDeps = {
   app: OpenAPIHono<{
     Variables: AuthVariables;
   }>;
+  auth: Auth;
 };
 
-export const registerAuthRoutes = ({ app }: RegisterAuthRoutesDeps) => {
+export const registerAuthRoutes = ({ app, auth }: RegisterAuthRoutesDeps) => {
   app.openapi(getMeRoute, async (context) => {
     const session = await auth.api.getSession({
       headers: context.req.raw.headers,

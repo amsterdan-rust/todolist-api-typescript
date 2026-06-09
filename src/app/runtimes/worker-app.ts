@@ -1,10 +1,11 @@
-// src/app/worker.ts
-import { Hono } from "hono";
 import { sql } from "drizzle-orm";
+import { Hono } from "hono";
 
-import { makeD1Database } from "../database/worker/d1";
+import { makeWorkerContainer } from "@app/composition/make-worker-container";
+import { makeD1Database } from "@app/database/worker/d1";
+import { makeHonoApp } from "@app/http/hono/make-hono-app";
+import { makeAuth } from "@auth/infra/better-auth/auth.factory";
 import type { D1Database } from "@cloudflare/workers-types";
-import { makeAuth } from "@/features/auth/infra/better-auth/auth.factory";
 
 type Env = {
   Bindings: {
@@ -15,39 +16,22 @@ type Env = {
 
 const app = new Hono<Env>();
 
-app.on(["POST", "GET"], "/auth/*", (c) => {
-  const db = makeD1Database(c.env.DB);
+app.get("/debug/db", async (context) => {
+  const result = await context.env.DB.prepare("SELECT 1 as ok").first();
 
-  const auth = makeAuth({
-    db,
-    baseURL: c.env.BETTER_AUTH_URL,
-  });
-
-  return auth.handler(c.req.raw);
+  return context.json(result);
 });
 
-app.get("/health", (c) =>
-  c.json({
-    status: "ok",
-  }),
-);
-
-app.get("/debug/db", async (c) => {
-  const result = await c.env.DB.prepare("SELECT 1 as ok").first();
-
-  return c.json(result);
-});
-
-app.get("/debug/drizzle", async (c) => {
-  const db = makeD1Database(c.env.DB);
+app.get("/debug/drizzle", async (context) => {
+  const db = makeD1Database(context.env.DB);
 
   const result = await db.get<{ ok: number }>(sql`SELECT 1 as ok`);
 
-  return c.json(result);
+  return context.json(result);
 });
 
-app.get("/debug/tables", async (c) => {
-  const db = makeD1Database(c.env.DB);
+app.get("/debug/tables", async (context) => {
+  const db = makeD1Database(context.env.DB);
 
   const tables = await db.all<{ name: string }>(sql`
     SELECT name
@@ -56,9 +40,29 @@ app.get("/debug/tables", async (c) => {
     ORDER BY name
   `);
 
-  return c.json({
+  return context.json({
     tables,
   });
+});
+
+app.all("*", (context) => {
+  const db = makeD1Database(context.env.DB);
+
+  const auth = makeAuth({
+    db,
+    baseURL: context.env.BETTER_AUTH_URL,
+  });
+
+  const container = makeWorkerContainer({
+    db,
+  });
+
+  const honoApp = makeHonoApp({
+    auth,
+    container,
+  });
+
+  return honoApp.fetch(context.req.raw, context.env);
 });
 
 export default app;

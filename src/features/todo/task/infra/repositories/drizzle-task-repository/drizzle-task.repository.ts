@@ -1,7 +1,8 @@
 import { and, asc, desc, eq, isNull, sql, type SQL } from "drizzle-orm";
+import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
 
-import type { db } from "@/app/database/local/db";
-import { tasks } from "@/app/database/schemas/task.schema";
+import type * as databaseSchema from "@app/database/schema";
+import { tasks } from "@app/database/schemas/task.schema";
 import type {
   ListTaskRecordsInput,
   TaskRepository,
@@ -9,7 +10,11 @@ import type {
 } from "@todo/task/app/repositories/task-repository";
 import { taskSchema, type Task } from "@todo/task/domain/task.schema";
 
-type Database = typeof db;
+type Database = BaseSQLiteDatabase<
+  "sync" | "async",
+  any,
+  typeof databaseSchema
+>;
 
 type MakeDrizzleTaskRepositoryDeps = {
   db: Database;

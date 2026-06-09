@@ -5,7 +5,7 @@ import { makeInMemoryContainer } from "@app/composition/make-in-memory-container
 import { makeHonoApp } from "@app/http/hono/make-hono-app";
 import { auth } from "@auth/infra/better-auth/auth";
 
-import { betterAuthMiddleware } from "./better-auth.middleware";
+import { makeBetterAuthMiddleware } from "./better-auth.middleware";
 
 type ProtectedUserResponse = {
   user: {
@@ -17,7 +17,13 @@ describe("betterAuthMiddleware", () => {
   it("returns unauthorized when request has no session", async () => {
     const app = new Hono();
 
-    app.use("/protected/*", betterAuthMiddleware());
+    app.use(
+      "/protected/*",
+      makeBetterAuthMiddleware({
+        auth,
+      }),
+    );
+
     app.get("/protected/me", (c) => c.json({ user: c.get("user") }));
 
     const response = await app.request("/protected/me");
@@ -30,6 +36,7 @@ describe("betterAuthMiddleware", () => {
       auth,
       container: makeInMemoryContainer(),
     });
+
     const email = `test-${crypto.randomUUID()}@example.com`;
 
     const signUpResponse = await authApp.request("/auth/sign-up/email", {
@@ -51,7 +58,13 @@ describe("betterAuthMiddleware", () => {
 
     const app = new Hono();
 
-    app.use("/protected/*", betterAuthMiddleware());
+    app.use(
+      "/protected/*",
+      makeBetterAuthMiddleware({
+        auth,
+      }),
+    );
+
     app.get("/protected/me", (c) => c.json({ user: c.get("user") }));
 
     const response = await app.request("/protected/me", {

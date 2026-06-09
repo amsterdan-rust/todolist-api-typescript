@@ -1,8 +1,9 @@
 // src/features/todo/category/infra/repositories/drizzle-category-repository/drizzle-category.repository.ts
 import { and, eq, sql } from "drizzle-orm";
+import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
 
-import type { db } from "@/app/database/local/db";
-import { categories } from "@/app/database/schemas/category.schema";
+import type * as databaseSchema from "@app/database/schema";
+import { categories } from "@app/database/schemas/category.schema";
 import type {
   CategoryRepository,
   ListCategoryRecordsInput,
@@ -10,7 +11,11 @@ import type {
 import { makeCategory } from "@todo/category/domain/category";
 import type { Category } from "@todo/category/domain/category.schema";
 
-type Database = typeof db;
+type Database = BaseSQLiteDatabase<
+  "sync" | "async",
+  any,
+  typeof databaseSchema
+>;
 
 type MakeDrizzleCategoryRepositoryDeps = {
   db: Database;

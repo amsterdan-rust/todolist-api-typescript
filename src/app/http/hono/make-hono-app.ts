@@ -3,14 +3,14 @@ import { Scalar } from "@scalar/hono-api-reference";
 
 import type { AppContainer } from "@app/composition/make-app-container";
 import {
-  betterAuthMiddleware,
+  makeBetterAuthMiddleware,
   type AuthVariables,
 } from "@auth/infra/better-auth/better-auth.middleware";
 import type { Auth } from "@auth/infra/better-auth/auth.factory";
+import { registerAuthRoutes } from "@auth/infra/http/hono/routes/auth.routes";
 import { registerTaskRoutes } from "@features/todo/task/infra/http/hono/routes/tasks.routes";
 import { registerCategoryRoutes } from "@todo/category/infra/http/hono/routes/categories.routes";
 import { makeHonoErrorHandler } from "./hono-error-handler";
-import { registerAuthRoutes } from "@auth/infra/http/hono/routes/auth.routes";
 
 type MakeHonoAppDeps = {
   container: AppContainer;
@@ -79,17 +79,24 @@ export const makeHonoApp = ({ container, auth }: MakeHonoAppDeps) => {
     }),
   );
 
-  app.on(["POST", "GET"], "/auth/*", (c) => auth.handler(c.req.raw));
+  app.on(["POST", "GET"], "/auth/*", (context) =>
+    auth.handler(context.req.raw),
+  );
 
   registerAuthRoutes({
     app,
+    auth,
   });
 
-  app.use("/tasks", betterAuthMiddleware());
-  app.use("/tasks/*", betterAuthMiddleware());
+  const authMiddleware = makeBetterAuthMiddleware({
+    auth,
+  });
 
-  app.use("/categories", betterAuthMiddleware());
-  app.use("/categories/*", betterAuthMiddleware());
+  app.use("/tasks", authMiddleware);
+  app.use("/tasks/*", authMiddleware);
+
+  app.use("/categories", authMiddleware);
+  app.use("/categories/*", authMiddleware);
 
   registerTaskRoutes({
     app,

@@ -1,4 +1,4 @@
-import type { Task, TaskStatus } from "../domain/task.schema";
+import type { Task, TaskStatus } from "../../domain/task.schema";
 
 export type TaskRepositoryMutationResult = {
   id: string;
