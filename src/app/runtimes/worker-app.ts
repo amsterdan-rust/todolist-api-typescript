@@ -1,4 +1,3 @@
-import { sql } from "drizzle-orm";
 import { Hono } from "hono";
 
 import { makeWorkerContainer } from "@app/composition/make-worker-container";
@@ -16,35 +15,6 @@ type Env = {
 };
 
 const app = new Hono<Env>();
-
-app.get("/debug/db", async (context) => {
-  const result = await context.env.DB.prepare("SELECT 1 as ok").first();
-
-  return context.json(result);
-});
-
-app.get("/debug/drizzle", async (context) => {
-  const db = makeD1Database(context.env.DB);
-
-  const result = await db.get<{ ok: number }>(sql`SELECT 1 as ok`);
-
-  return context.json(result);
-});
-
-app.get("/debug/tables", async (context) => {
-  const db = makeD1Database(context.env.DB);
-
-  const tables = await db.all<{ name: string }>(sql`
-    SELECT name
-    FROM sqlite_master
-    WHERE type = 'table'
-    ORDER BY name
-  `);
-
-  return context.json({
-    tables,
-  });
-});
 
 app.all("*", (context) => {
   const db = makeD1Database(context.env.DB);
