@@ -7,11 +7,12 @@ import { makeCryptoIdGenerator } from "@shared/id-generator";
 type MakeAuthDeps = {
   db: Parameters<typeof drizzleAdapter>[0];
   baseURL: string;
+  secret: string;
 };
 
 const idGenerator = makeCryptoIdGenerator();
 
-export const makeAuth = ({ db, baseURL }: MakeAuthDeps) =>
+export const makeAuth = ({ db, baseURL, secret }: MakeAuthDeps) =>
   betterAuth({
     database: drizzleAdapter(db, {
       provider: "sqlite",
@@ -19,6 +20,7 @@ export const makeAuth = ({ db, baseURL }: MakeAuthDeps) =>
     }),
     baseURL,
     basePath: "/auth",
+    secret,
     emailAndPassword: {
       enabled: true,
     },

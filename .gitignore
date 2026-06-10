@@ -11,6 +11,7 @@ app.test.sqlite-shm
 app.test.sqlite-wal
 
 .wrangler/
+cookies.txt
 
 # dependencies (bun install)
 node_modules

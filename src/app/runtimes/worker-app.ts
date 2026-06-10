@@ -11,6 +11,7 @@ type Env = {
   Bindings: {
     DB: D1Database;
     BETTER_AUTH_URL: string;
+    BETTER_AUTH_SECRET: string;
   };
 };
 
@@ -51,6 +52,7 @@ app.all("*", (context) => {
   const auth = makeAuth({
     db,
     baseURL: context.env.BETTER_AUTH_URL,
+    secret: context.env.BETTER_AUTH_SECRET,
   });
 
   const container = makeWorkerContainer({
