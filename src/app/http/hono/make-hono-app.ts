@@ -1,4 +1,5 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
+import { cors } from "hono/cors";
 import { Scalar } from "@scalar/hono-api-reference";
 
 import type { AppContainer } from "@app/composition/make-app-container";
@@ -38,6 +39,11 @@ const healthRoute = createRoute({
   },
 });
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://todolist-api.amsterdan-todolist.workers.dev",
+];
+
 export const makeHonoApp = ({ container, auth }: MakeHonoAppDeps) => {
   const app = new OpenAPIHono<{
     Variables: AuthVariables;
@@ -54,6 +60,26 @@ export const makeHonoApp = ({ container, auth }: MakeHonoAppDeps) => {
       }
     },
   });
+
+  app.use(
+    "*",
+    cors({
+      origin: (origin) => {
+        if (!origin) {
+          return allowedOrigins[0];
+        }
+
+        if (allowedOrigins.includes(origin)) {
+          return origin;
+        }
+
+        return allowedOrigins[0];
+      },
+      allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+      allowHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    }),
+  );
 
   app.onError(makeHonoErrorHandler());
 
