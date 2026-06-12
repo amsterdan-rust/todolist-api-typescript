@@ -6,8 +6,5 @@ export const auth = makeAuth({
   db,
   baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:8000",
   secret: process.env.BETTER_AUTH_SECRET ?? "development-secret",
-  trustedOrigins: [
-    "http://localhost:3000",
-    "https://todolist-api.amsterdan-todolist.workers.dev",
-  ],
+  trustedOrigins: ["http://localhost:3000"],
 });
