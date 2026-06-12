@@ -23,6 +23,10 @@ app.all("*", (context) => {
     db,
     baseURL: context.env.BETTER_AUTH_URL,
     secret: context.env.BETTER_AUTH_SECRET,
+    trustedOrigins: [
+      "http://localhost:3000",
+      "https://todolist-api.amsterdan-todolist.workers.dev",
+    ],
   });
 
   const container = makeWorkerContainer({
