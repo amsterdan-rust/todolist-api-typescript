@@ -32,6 +32,12 @@ export const makeAuth = ({
       enabled: true,
     },
     advanced: {
+      useSecureCookies: true,
+      defaultCookieAttributes: {
+        sameSite: "none",
+        secure: true,
+        httpOnly: true,
+      },
       database: {
         generateId: () => idGenerator.generate(),
       },
